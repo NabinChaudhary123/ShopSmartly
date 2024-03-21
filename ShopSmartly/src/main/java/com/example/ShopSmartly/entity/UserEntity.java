@@ -1,11 +1,18 @@
 package com.example.ShopSmartly.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class UserEntity {
@@ -24,4 +31,9 @@ public class UserEntity {
     @UpdateTimestamp
     @Column(name = "update_At")
     private Date updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    @JsonIgnore
+    private Role role;
 }
