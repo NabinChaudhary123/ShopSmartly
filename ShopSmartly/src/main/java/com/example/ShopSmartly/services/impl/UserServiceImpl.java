@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
         user.setContact(userRegistrationDto.getContact());
         user.setPassword(passwordEncoder.encode(userRegistrationDto.getPassword()));
 
-        Role roles = roleRepository.findByName("USER").orElseThrow(()->new RuntimeException("Such Role does not exist"));
+        Role roles = roleRepository.findByName("ROLE_USER").orElseThrow(()->new RuntimeException("Such Role does not exist"));
         user.setRole(roles);
 
         userRepository.save(user);
