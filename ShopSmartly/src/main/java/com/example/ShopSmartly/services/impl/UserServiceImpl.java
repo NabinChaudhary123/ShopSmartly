@@ -8,6 +8,7 @@ import com.example.ShopSmartly.repository.UserRepository;
 import com.example.ShopSmartly.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,11 +16,12 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
-
+        this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
     }
 
@@ -32,7 +34,7 @@ public class UserServiceImpl implements UserService {
         user.setFullName(userRegistrationDto.getFullName());
         user.setEmail(userRegistrationDto.getEmail());
         user.setContact(userRegistrationDto.getContact());
-        user.setPassword(userRegistrationDto.getPassword());
+        user.setPassword(passwordEncoder.encode(userRegistrationDto.getPassword()));
 
         Role roles = roleRepository.findByName("USER").orElseThrow(()->new RuntimeException("Such Role does not exist"));
         user.setRole(roles);
