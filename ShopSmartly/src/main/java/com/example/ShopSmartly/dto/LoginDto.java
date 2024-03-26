@@ -3,7 +3,7 @@ package com.example.ShopSmartly.dto;
 import lombok.Data;
 
 @Data
-public class UserLoginDto {
+public class LoginDto {
 
     private String email;
     private String password;

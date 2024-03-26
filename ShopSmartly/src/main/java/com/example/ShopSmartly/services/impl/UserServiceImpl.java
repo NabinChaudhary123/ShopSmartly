@@ -3,7 +3,6 @@ package com.example.ShopSmartly.services.impl;
 import com.example.ShopSmartly.dto.UserRegistrationDto;
 import com.example.ShopSmartly.entity.Role;
 import com.example.ShopSmartly.entity.UserEntity;
-import com.example.ShopSmartly.repository.RoleRepository;
 import com.example.ShopSmartly.repository.UserRepository;
 import com.example.ShopSmartly.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -17,12 +16,10 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final RoleRepository roleRepository;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -31,13 +28,11 @@ public class UserServiceImpl implements UserService {
             return new ResponseEntity<>("User already exist: "+userRegistrationDto.getEmail(), HttpStatus.BAD_REQUEST);
         }
         UserEntity user = new UserEntity();
-        user.setFullName(userRegistrationDto.getFullName());
+
         user.setEmail(userRegistrationDto.getEmail());
         user.setContact(userRegistrationDto.getContact());
         user.setPassword(passwordEncoder.encode(userRegistrationDto.getPassword()));
-
-        Role roles = roleRepository.findByName("ROLE_USER").orElseThrow(()->new RuntimeException("Such Role does not exist"));
-        user.setRole(roles);
+        user.setRole(Role.USER);
 
         userRepository.save(user);
         return new ResponseEntity<>("User is registered successfully", HttpStatus.CREATED);
@@ -47,4 +42,6 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<List<UserEntity>> ListAllUser() {
         return new ResponseEntity<>(userRepository.findAll(),HttpStatus.OK);
     }
+
+
 }

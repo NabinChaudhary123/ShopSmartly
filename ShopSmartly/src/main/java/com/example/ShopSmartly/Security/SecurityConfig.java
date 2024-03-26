@@ -1,5 +1,6 @@
 package com.example.ShopSmartly.Security;
 
+import com.example.ShopSmartly.services.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,45 +15,44 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.security.Security;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JWTAuthEntryPoint entryPoint;
+    private final CustomUserDetailsService userDetailsService;
+    private final JWTAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(JWTAuthEntryPoint entryPoint) {
-        this.entryPoint = entryPoint;
+    public SecurityConfig(CustomUserDetailsService userDetailsService, JWTAuthenticationFilter jwtAuthenticationFilter) {
+        this.userDetailsService = userDetailsService;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(entryPoint))
                 .sessionManagement(exception -> exception.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/user/**").permitAll()
-                        .requestMatchers("/auth/loginUser").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/user/registerUser").permitAll()
+                        .requestMatchers("/user/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated())
+                .userDetailsService(userDetailsService)
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults());
-        http.addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .formLogin(Customizer.withDefaults())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)throws Exception{
-        return configuration.getAuthenticationManager();
-    }
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public JWTAuthenticationFilter authenticationFilter(){
-        return new JWTAuthenticationFilter();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
+        return configuration.getAuthenticationManager();
     }
+
 }
