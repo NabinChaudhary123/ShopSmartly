@@ -36,7 +36,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/user/registerUser").permitAll()
-                        .requestMatchers("/user/**").hasAuthority("ADMIN")
+                        .requestMatchers("/user/userProfile").hasAuthority("USER")
+                        .requestMatchers("/user/allUsers").hasAuthority("ADMIN")
+                        .requestMatchers("/products/**").permitAll()
                         .anyRequest().authenticated())
                 .userDetailsService(userDetailsService)
                 .httpBasic(Customizer.withDefaults())

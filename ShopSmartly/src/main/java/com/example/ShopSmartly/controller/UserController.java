@@ -5,6 +5,8 @@ import com.example.ShopSmartly.entity.UserEntity;
 import com.example.ShopSmartly.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +29,12 @@ public class UserController {
     @GetMapping("/allUsers")
     public ResponseEntity<List<UserEntity>> ListAllUsers(){
         return userService.ListAllUser();
+    }
+    @GetMapping("/userProfile")
+    public ResponseEntity<UserEntity> userProfile(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity user = (UserEntity)authentication.getPrincipal();
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
 

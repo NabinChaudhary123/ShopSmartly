@@ -29,6 +29,7 @@ public class UserServiceImpl implements UserService {
         }
         UserEntity user = new UserEntity();
 
+        user.setFullName(userRegistrationDto.getFullName());
         user.setEmail(userRegistrationDto.getEmail());
         user.setContact(userRegistrationDto.getContact());
         user.setPassword(passwordEncoder.encode(userRegistrationDto.getPassword()));
