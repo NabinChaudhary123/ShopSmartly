@@ -1,11 +1,16 @@
 package com.example.ShopSmartly.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
+@Getter
+@Setter@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "orders")
 public class Order {
