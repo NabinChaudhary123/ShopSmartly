@@ -5,12 +5,14 @@ import com.example.ShopSmartly.entity.Product;
 import com.example.ShopSmartly.services.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/products")
 public class ProductController {
 
@@ -27,8 +29,8 @@ public class ProductController {
     }
 
     @PostMapping("/registerProducts")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> registerProducts(@ModelAttribute ProductDto productDto) throws IOException{
-
         return new ResponseEntity<>(productService.saveProducts(productDto),HttpStatus.CREATED);
     }
 
