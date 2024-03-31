@@ -29,7 +29,6 @@ public class ProductController {
     }
 
     @PostMapping("/registerProducts")
-//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> registerProducts(@ModelAttribute ProductDto productDto) throws IOException{
         return new ResponseEntity<>(productService.saveProducts(productDto),HttpStatus.CREATED);
     }
