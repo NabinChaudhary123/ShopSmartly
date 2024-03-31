@@ -7,6 +7,6 @@ public class UserRegistrationDto {
 
     private String fullName;
     private String email;
-    private String contact;
+    private Long contact;
     private String password;
 }
