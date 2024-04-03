@@ -43,8 +43,9 @@ public class UserServiceImpl implements UserService {
 
         Order order = new Order();
         order.setUser(user);
-        order.setOrderStatus(OrderStatus.PENDING);
+        order.setOrderStatus(OrderStatus.Pending);
         order.setPrice(0L);
+        order.setTotalAmount(0L);
         orderRepository.save(order);
         return new ResponseEntity<>("User is registered successfully", HttpStatus.CREATED);
     }

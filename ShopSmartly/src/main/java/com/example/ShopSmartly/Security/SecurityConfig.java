@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -36,10 +35,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/user/registerUser").permitAll()
-                        .requestMatchers("/user/userProfile").hasAuthority("USER")
+                        .requestMatchers("/user/userProfile").permitAll()
                         .requestMatchers("/user/allUsers").hasAuthority("ADMIN")
-                        .requestMatchers("/products/listProducts").permitAll()
-                        .requestMatchers("/products/registerProducts").permitAll()
+                        .requestMatchers("/products/**").permitAll()
+                        .requestMatchers("/cart/postCart").permitAll()
+//                        .requestMatchers("/products/registerProducts").permitAll()
                         .anyRequest().authenticated())
                 .userDetailsService(userDetailsService)
                 .httpBasic(Customizer.withDefaults())

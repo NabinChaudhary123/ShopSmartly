@@ -1,6 +1,8 @@
 package com.example.ShopSmartly.entity;
 
 public enum OrderStatus {
-    PENDING,
-    SUBMITTED
+    Pending,
+    Placed,
+    shipped,
+    Delivered
 }

@@ -2,10 +2,16 @@ package com.example.ShopSmartly.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "cartItems")
 public class CartItems {
@@ -19,12 +25,11 @@ public class CartItems {
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "product_id",nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private Product product;
+
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "user_id",nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private UserEntity user;
 
     @OneToOne(fetch = FetchType.LAZY)

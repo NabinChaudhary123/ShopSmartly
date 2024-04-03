@@ -39,6 +39,7 @@ public class Product {
     public ProductDto getProductDto(){
 
         ProductDto productDto = new ProductDto();
+        productDto.setProductId(id);
         productDto.setProductName(productName);
         productDto.setProductDescription(productDescription);
         productDto.setCategory(category);

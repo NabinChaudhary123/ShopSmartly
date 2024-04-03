@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Getter
-@Setter@ToString
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -24,9 +25,10 @@ public class Order {
     private String paymentType;
     private Date date;
     private Long price;
+    private Long totalAmount;
     private OrderStatus orderStatus;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
 
