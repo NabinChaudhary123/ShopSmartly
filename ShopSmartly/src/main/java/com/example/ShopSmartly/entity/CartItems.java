@@ -1,5 +1,6 @@
 package com.example.ShopSmartly.entity;
 
+import com.example.ShopSmartly.dto.CartItemsDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,4 +36,16 @@ public class CartItems {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
+
+    public CartItemsDto getCartItemsDto(){
+        CartItemsDto cartItemsDto = new CartItemsDto();
+        cartItemsDto.setId(id);
+        cartItemsDto.setPrice(price);
+        cartItemsDto.setPrice(product.getId());
+        cartItemsDto.setQuantity(quantity);
+        cartItemsDto.setUserId(user.getId());
+        cartItemsDto.setProductName(product.getProductName());
+        cartItemsDto.setReturnedImage(product.getImage());
+        return cartItemsDto;
+    }
 }

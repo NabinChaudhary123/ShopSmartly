@@ -1,6 +1,8 @@
 package com.example.ShopSmartly.services.impl;
 
 import com.example.ShopSmartly.dto.CartDto;
+import com.example.ShopSmartly.dto.CartItemsDto;
+import com.example.ShopSmartly.dto.OrderDto;
 import com.example.ShopSmartly.entity.*;
 import com.example.ShopSmartly.repository.CartItemRepository;
 import com.example.ShopSmartly.repository.OrderRepository;
@@ -11,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -63,5 +67,18 @@ public class CartServiceImpl implements CartService {
             }
         }
 
+    }
+
+    @Override
+    public OrderDto getCartByUserId(Long userId) {
+        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(userId, OrderStatus.Pending);
+        List<CartItemsDto> cartItemsDtos = activeOrder.getCartItems().stream().map(CartItems::getCartItemsDto).collect(Collectors.toList());
+        OrderDto orderDto = new OrderDto();
+        orderDto.setPrice(activeOrder.getPrice());
+        orderDto.setId(activeOrder.getId());
+        orderDto.setOrderStatus(activeOrder.getOrderStatus());
+        orderDto.setTotalAmount(activeOrder.getTotalAmount());
+        orderDto.setCartItems(cartItemsDtos);
+        return orderDto;
     }
 }
