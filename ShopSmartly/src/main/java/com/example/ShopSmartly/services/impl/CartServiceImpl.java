@@ -136,8 +136,17 @@ public class CartServiceImpl implements CartService {
             activeOrder.setAddress(placeOrderDto.getAddress());
             activeOrder.setDate(new Date());
             activeOrder.setOrderStatus(OrderStatus.Placed);
-
             orderRepository.save(activeOrder);
+
+            Order order = new Order();
+            order.setPrice(0L);
+            order.setTotalAmount(0L);
+            order.setUser(optionalUser.get());
+            order.setOrderStatus(OrderStatus.Pending);
+            orderRepository.save(order);
+
+            return activeOrder.getOrderDto();
+
 
         }
         return null;
