@@ -1,9 +1,6 @@
 package com.example.ShopSmartly.services.impl;
 
-import com.example.ShopSmartly.dto.AddProductInCartDto;
-import com.example.ShopSmartly.dto.CartDto;
-import com.example.ShopSmartly.dto.CartItemsDto;
-import com.example.ShopSmartly.dto.OrderDto;
+import com.example.ShopSmartly.dto.*;
 import com.example.ShopSmartly.entity.*;
 import com.example.ShopSmartly.repository.CartItemRepository;
 import com.example.ShopSmartly.repository.OrderRepository;
@@ -15,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -103,6 +101,44 @@ public class CartServiceImpl implements CartService {
             cartItemRepository.save(cartItems);
             orderRepository.save(activeOrder);
             return activeOrder.getOrderDto();
+        }
+        return null;
+    }
+
+    public OrderDto decreaseProductQuantity(AddProductInCartDto addProductInCartDto){
+        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(addProductInCartDto.getUserId(), OrderStatus.Pending);
+        Optional<Product> optionalProduct = productRepository.findById(addProductInCartDto.getProductId());
+
+        Optional<CartItems> optionalCartItems = cartItemRepository.findByUserIdAndProductIdAndOrderId(addProductInCartDto.getUserId(),
+                addProductInCartDto.getProductId(), activeOrder.getId());
+
+        if(optionalProduct.isPresent() && optionalCartItems.isPresent()){
+            CartItems cartItems = optionalCartItems.get();
+            Product product = optionalProduct.get();
+
+            activeOrder.setPrice(activeOrder.getPrice()-product.getPrice());
+            activeOrder.setTotalAmount(activeOrder.getTotalAmount() - product.getPrice());
+
+            cartItems.setQuantity(cartItems.getQuantity()-1);
+
+            cartItemRepository.save(cartItems);
+            orderRepository.save(activeOrder);
+            return activeOrder.getOrderDto();
+        }
+        return null;
+    }
+
+    public OrderDto placeOrder(PlaceOrderDto placeOrderDto){
+        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(placeOrderDto.getUserId(), OrderStatus.Pending);
+        Optional<UserEntity> optionalUser = userRepository.findById(placeOrderDto.getUserId());
+        if(optionalUser.isPresent()){
+            activeOrder.setDescription(placeOrderDto.getDescription());
+            activeOrder.setAddress(placeOrderDto.getAddress());
+            activeOrder.setDate(new Date());
+            activeOrder.setOrderStatus(OrderStatus.Placed);
+
+            orderRepository.save(activeOrder);
+
         }
         return null;
     }
