@@ -1,5 +1,6 @@
 package com.example.ShopSmartly.controller;
 
+import com.example.ShopSmartly.dto.AddProductInCartDto;
 import com.example.ShopSmartly.dto.CartDto;
 import com.example.ShopSmartly.dto.OrderDto;
 import com.example.ShopSmartly.services.CartService;
@@ -24,5 +25,10 @@ public class CartController {
     public ResponseEntity<?> getCartByUserId(@PathVariable Long userId){
         OrderDto orderDto = cartService.getCartByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).body(orderDto);
+    }
+
+    @PostMapping("/addQuantity")
+    public ResponseEntity<OrderDto> increaseProductQuantity(@RequestBody AddProductInCartDto addProductInCartDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartService.increaseProductQuantity(addProductInCartDto));
     }
 }

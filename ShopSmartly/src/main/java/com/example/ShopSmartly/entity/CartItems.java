@@ -41,7 +41,7 @@ public class CartItems {
         CartItemsDto cartItemsDto = new CartItemsDto();
         cartItemsDto.setId(id);
         cartItemsDto.setPrice(price);
-        cartItemsDto.setPrice(product.getId());
+        cartItemsDto.setProductId(product.getId());
         cartItemsDto.setQuantity(quantity);
         cartItemsDto.setUserId(user.getId());
         cartItemsDto.setProductName(product.getProductName());

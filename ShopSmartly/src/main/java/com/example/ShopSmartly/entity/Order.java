@@ -1,7 +1,9 @@
 package com.example.ShopSmartly.entity;
 
+import com.example.ShopSmartly.dto.OrderDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.aspectj.weaver.ast.Or;
 
 import java.util.Date;
 import java.util.List;
@@ -34,4 +36,17 @@ public class Order {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
     private List<CartItems> cartItems;
+
+    public OrderDto getOrderDto() {
+        OrderDto orderDto = new OrderDto();
+        orderDto.setId(id);
+        orderDto.setDescription(description);
+        orderDto.setAddress(address);
+        orderDto.setPrice(price);
+        orderDto.setTotalAmount(totalAmount);
+        orderDto.setDate(date);
+        orderDto.setOrderStatus(orderStatus);
+        orderDto.setFullName(user.getFullName());
+        return orderDto;
+    }
 }
