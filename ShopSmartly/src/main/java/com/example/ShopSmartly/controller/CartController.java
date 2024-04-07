@@ -1,9 +1,10 @@
 package com.example.ShopSmartly.controller;
 
 import com.example.ShopSmartly.dto.AddProductInCartDto;
-import com.example.ShopSmartly.dto.CartDto;
+import com.example.ShopSmartly.dto.CartItemsDto;
 import com.example.ShopSmartly.dto.OrderDto;
 import com.example.ShopSmartly.dto.PlaceOrderDto;
+import com.example.ShopSmartly.entity.Order;
 import com.example.ShopSmartly.services.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,12 +19,13 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping("/postCart")
-    public ResponseEntity<?> addProductToCart(@RequestBody CartDto cartDto){
+    public ResponseEntity<?> addProductToCart(@RequestBody CartItemsDto cartDto){
         return cartService.addProductToCart(cartDto);
+//        return new ResponseEntity<>(cartService.addProductToCart(cartDto),HttpStatus.CREATED);
     }
 
     @GetMapping("/getCartByUserId/{userId}")
-    public ResponseEntity<?> getCartByUserId(@PathVariable Long userId){
+    public ResponseEntity<OrderDto> getCartByUserId(@PathVariable Long userId){
         OrderDto orderDto = cartService.getCartByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).body(orderDto);
     }
@@ -35,11 +37,18 @@ public class CartController {
 
     @PostMapping("/decreaseQuantity")
     public ResponseEntity<OrderDto> decreaseProductQuantity(@RequestBody AddProductInCartDto addProductInCartDto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(cartService.decreaseProductQuantity(addProductInCartDto));
+        OrderDto orderDto = cartService.decreaseProductQuantity(addProductInCartDto);
+        return new ResponseEntity<>(orderDto,HttpStatus.OK);
     }
 
     @PostMapping("/placeOrder")
     public ResponseEntity<OrderDto> placeOrder(@RequestBody PlaceOrderDto placeOrderDto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(cartService.placeOrder(placeOrderDto));
+        OrderDto orderDto = cartService.placeOrder(placeOrderDto);
+        if(orderDto == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.CREATED).body(orderDto);
+        }
     }
 }

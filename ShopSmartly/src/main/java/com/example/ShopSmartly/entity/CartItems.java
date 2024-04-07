@@ -8,11 +8,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-@Getter
-@Setter
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Entity
 @Table(name = "cartItems")
 public class CartItems {
@@ -21,26 +17,30 @@ public class CartItems {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long price;
+//    private Long totalPrice;
     private Long quantity;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "product_id",nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "user_id",nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private UserEntity user;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 
-    public CartItemsDto getCartItemsDto(){
+    public CartItemsDto getCartDto(){
         CartItemsDto cartItemsDto = new CartItemsDto();
         cartItemsDto.setId(id);
         cartItemsDto.setPrice(price);
+//        cartItemsDto.setTotalPrice(totalPrice);
         cartItemsDto.setProductId(product.getId());
         cartItemsDto.setQuantity(quantity);
         cartItemsDto.setUserId(user.getId());

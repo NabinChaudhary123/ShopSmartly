@@ -22,7 +22,7 @@ public class Product {
     private Long id;
     private String productName;
     private String productDescription;
-    private Integer price;
+    private Long price;
     private String category;
 
     @Column(columnDefinition = "longblob")

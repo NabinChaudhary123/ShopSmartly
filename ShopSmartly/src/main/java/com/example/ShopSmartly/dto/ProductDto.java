@@ -8,7 +8,7 @@ public class ProductDto {
     private Long productId;
     private String productName;
     private String productDescription;
-    private Integer price;
+    private Long price;
     private String category;
     private MultipartFile image;
     private byte[] returnedImage;
