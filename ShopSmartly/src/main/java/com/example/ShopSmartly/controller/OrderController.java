@@ -24,4 +24,10 @@ public class OrderController {
         List<OrderDto> orderDtoList = orderService.getOrderByUserId(userId);
         return ResponseEntity.ok(orderDtoList);
     }
+
+    @GetMapping("/allOrders")
+    public ResponseEntity<List<OrderDto>> getAllOrders(){
+        List<OrderDto> allOrders = orderService.getAllOrders();
+        return ResponseEntity.ok(allOrders);
+    }
 }

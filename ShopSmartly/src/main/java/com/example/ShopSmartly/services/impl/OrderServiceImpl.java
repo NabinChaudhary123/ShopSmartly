@@ -26,4 +26,9 @@ public class OrderServiceImpl implements OrderService {
                 .map(Order::getOrderDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<OrderDto> getAllOrders() {
+        return orderRepository.findAllByOrderStatus(OrderStatus.Submitted).stream().map(Order::getOrderDto).collect(Collectors.toList());
+    }
 }
