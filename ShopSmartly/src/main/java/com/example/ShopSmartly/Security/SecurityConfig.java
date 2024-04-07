@@ -39,7 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/user/allUsers").hasAuthority("ADMIN")
                         .requestMatchers("/products/**").permitAll()
                         .requestMatchers("/cart/postCart","/cart/getCartByUserId/{userId}","/cart/addQuantity","/cart/decreaseQuantity","/cart/placeOrder").permitAll()
-//                        .requestMatchers("/products/registerProducts").permitAll()
+                        .requestMatchers("/order/orderByUserId/{userId}").permitAll()
                         .anyRequest().authenticated())
                 .userDetailsService(userDetailsService)
                 .httpBasic(Customizer.withDefaults())

@@ -6,6 +6,8 @@ import com.example.ShopSmartly.dto.OrderDto;
 import com.example.ShopSmartly.dto.PlaceOrderDto;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 public interface CartService {
 
     ResponseEntity<?> addProductToCart(CartItemsDto cartDto);
@@ -13,5 +15,6 @@ public interface CartService {
     OrderDto increaseProductQuantity(AddProductInCartDto addProductInCartDto);
     OrderDto decreaseProductQuantity(AddProductInCartDto addProductInCartDto);
     OrderDto placeOrder(PlaceOrderDto placeOrderDto);
+
 
 }

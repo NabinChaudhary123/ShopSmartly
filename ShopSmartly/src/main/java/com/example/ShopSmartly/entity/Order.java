@@ -36,6 +36,14 @@ public class Order {
     public OrderDto getOrderDto(){
         OrderDto orderDto = new OrderDto();
         orderDto.setId(id);
+        orderDto.setOrderStatus(OrderStatus.Submitted);
+        orderDto.setPrice(price);
+        orderDto.setTotalAmount(totalAmount);
+        orderDto.setPaymentType(paymentType);
+        orderDto.setFullName(user.getFullName());
+        orderDto.setDate(date);
+        orderDto.setDescription(description);
+        orderDto.setAddress(address);
         return orderDto;
     }
 }
