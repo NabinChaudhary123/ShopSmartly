@@ -13,5 +13,6 @@ public interface ProductService {
     List<ProductDto> getAllProducts();
     ResponseEntity<String> saveProducts(ProductDto productDto) throws IOException;
     List<ProductDto> getProductsByCategory(String category);
+    void deleteProduct(Long id);
 
 }
