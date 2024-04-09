@@ -32,6 +32,10 @@ public class ProductController {
     public ResponseEntity<?> registerProducts(@ModelAttribute ProductDto productDto) throws IOException{
         return new ResponseEntity<>(productService.saveProducts(productDto),HttpStatus.CREATED);
     }
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductDto>>getProductsByCategory(@RequestParam String category){
+        return ResponseEntity.ok(productService.getProductsByCategory(category));
+    }
 
 
 }

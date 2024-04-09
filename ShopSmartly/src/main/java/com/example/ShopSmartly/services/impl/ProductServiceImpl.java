@@ -42,4 +42,9 @@ public class ProductServiceImpl implements ProductService {
 
 
     }
+
+    @Override
+    public List<ProductDto> getProductsByCategory(String category) {
+        return productRepository.findAllByCategory(category).stream().map(Product::getProductDto).collect(Collectors.toList());
+    }
 }

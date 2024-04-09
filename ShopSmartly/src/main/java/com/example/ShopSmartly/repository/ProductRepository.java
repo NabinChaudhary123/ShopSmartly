@@ -1,5 +1,6 @@
 package com.example.ShopSmartly.repository;
 
+import com.example.ShopSmartly.dto.ProductDto;
 import com.example.ShopSmartly.entity.Product;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,5 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Long> {
 
+    List<Product> findAllByCategory(String category);
 }
