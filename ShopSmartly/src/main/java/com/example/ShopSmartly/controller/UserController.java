@@ -30,13 +30,18 @@ public class UserController {
     public ResponseEntity<List<UserEntity>> ListAllUsers(){
         return userService.ListAllUser();
     }
-    @GetMapping("/userProfile")
-    public ResponseEntity<UserEntity> userProfile(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserEntity user = (UserEntity)authentication.getPrincipal();
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
 
+//    @GetMapping("/userProfile")
+//    public ResponseEntity<UserEntity> userProfile(){
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        UserEntity user = (UserEntity)authentication.getPrincipal();
+//        return new ResponseEntity<>(user, HttpStatus.OK);
+//    }
+    @GetMapping("/profile/{userId}")
+    public ResponseEntity<UserEntity> getUserById(@PathVariable Long userId){
+        UserEntity user = userService.getUserById(userId);
+        return ResponseEntity.ok(user);
+    }
 
 
 }

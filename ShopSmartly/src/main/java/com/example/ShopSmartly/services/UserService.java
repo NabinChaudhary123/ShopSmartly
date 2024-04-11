@@ -10,4 +10,5 @@ public interface UserService {
 
     ResponseEntity<String> RegisterUser(UserRegistrationDto userRegistrationDto);
     ResponseEntity<List<UserEntity>> ListAllUser();
+    UserEntity getUserById(Long userId);
 }

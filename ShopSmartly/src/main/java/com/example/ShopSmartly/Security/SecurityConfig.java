@@ -34,8 +34,7 @@ public class SecurityConfig {
                 .sessionManagement(exception -> exception.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/user/registerUser").permitAll()
-                        .requestMatchers("/user/userProfile").permitAll()
+                        .requestMatchers("/user/**").permitAll()
                         .requestMatchers("/user/allUsers").hasAuthority("ADMIN")
                         .requestMatchers("/products/**").permitAll()
                         .requestMatchers("/cart/postCart","/cart/getCartByUserId/{userId}","/cart/addQuantity","/cart/decreaseQuantity","/cart/placeOrder").permitAll()

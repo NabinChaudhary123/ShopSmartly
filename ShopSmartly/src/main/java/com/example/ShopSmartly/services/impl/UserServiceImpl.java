@@ -8,8 +8,11 @@ import com.example.ShopSmartly.entity.UserEntity;
 import com.example.ShopSmartly.repository.OrderRepository;
 import com.example.ShopSmartly.repository.UserRepository;
 import com.example.ShopSmartly.services.UserService;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +56,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<List<UserEntity>> ListAllUser() {
         return new ResponseEntity<>(userRepository.findAll(),HttpStatus.OK);
+    }
+
+    @Override
+    public UserEntity getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(()-> new UsernameNotFoundException("User not found"));
     }
 
 

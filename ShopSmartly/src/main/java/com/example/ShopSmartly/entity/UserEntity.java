@@ -30,6 +30,7 @@ public class UserEntity implements UserDetails {
     private String fullName;
     private String email;
     private Long contact;
+    @JsonIgnore
     private String password;
     @CreationTimestamp
     @Column(name = "created_At", nullable = false, updatable = false)
