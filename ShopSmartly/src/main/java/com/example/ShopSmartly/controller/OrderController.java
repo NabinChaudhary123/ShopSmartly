@@ -37,6 +37,12 @@ public class OrderController {
         return ResponseEntity.ok(allOrders);
     }
 
+    @GetMapping("/allOrdersDesc")
+    public ResponseEntity<List<OrderDto>>getAllOrdersDesc(){
+        List<OrderDto> allOrdersDesc = orderService.getAllOrdersDesc();
+        return ResponseEntity.ok(allOrdersDesc);
+    }
+
     @GetMapping("/generatePDF")
     public ResponseEntity<List<OrderDto>>generatePdf() throws IOException {
         List<OrderDto> allOrders = orderService.getAllOrders();

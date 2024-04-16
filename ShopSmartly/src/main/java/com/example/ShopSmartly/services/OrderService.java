@@ -8,4 +8,5 @@ public interface OrderService {
 
     List<OrderDto> getOrderByUserId(Long userId);
     List<OrderDto> getAllOrders();
+    List<OrderDto> getAllOrdersDesc();
 }

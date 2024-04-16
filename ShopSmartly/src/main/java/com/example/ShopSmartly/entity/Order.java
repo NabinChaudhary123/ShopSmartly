@@ -1,6 +1,7 @@
 package com.example.ShopSmartly.entity;
 
 import com.example.ShopSmartly.dto.OrderDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.aspectj.weaver.ast.Or;
@@ -27,10 +28,12 @@ public class Order {
     private OrderStatus orderStatus;
 
     @ManyToOne(cascade = CascadeType.MERGE)
+    @JsonIgnore
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
+    @JsonIgnore
     private List<CartItems> cartItems;
 
     public OrderDto getOrderDto(){

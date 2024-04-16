@@ -45,15 +45,12 @@ public class AuthController {
             UserEntity user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow(()->
                     new UsernameNotFoundException("User does not exist"));
             String token = jwtGenerator.generateToken(user);
-//            return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
             JSONObject jsonResponse = new JSONObject()
                     .put("userId", user.getId())
                     .put("role",user.getRole())
                     .put("token",token);
 
             HttpHeaders headers = new HttpHeaders();
-//            response.addHeader("Access-Control-Expose-Headers", "Authorization");
-//            response.addHeader("Access-Control-Allow-Headers","Authorization,X-PINGOTHER,Origin,X-Requested-With,Content-Type,Accept,X-CustomHeader");
             response.addHeader(HEADER_STRING,TOKEN_PREFIX + token);
             return new ResponseEntity<>(jsonResponse.toString(), headers,HttpStatus.OK);
 

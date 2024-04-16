@@ -27,14 +27,14 @@ public class ProductController {
     public ResponseEntity<List<ProductDto>> allProducts(){
         return new ResponseEntity<>(productService.getAllProducts(),HttpStatus.OK);
     }
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductDto>>getProductsByCategory(@RequestParam String category){
+        return ResponseEntity.ok(productService.getProductsByCategory(category));
+    }
 
     @PostMapping("/registerProducts")
     public ResponseEntity<?> registerProducts(@ModelAttribute ProductDto productDto) throws IOException{
         return new ResponseEntity<>(productService.saveProducts(productDto),HttpStatus.CREATED);
-    }
-    @GetMapping("/products")
-    public ResponseEntity<List<ProductDto>>getProductsByCategory(@RequestParam String category){
-        return ResponseEntity.ok(productService.getProductsByCategory(category));
     }
 
     @DeleteMapping("/deleteProduct/{id}")
