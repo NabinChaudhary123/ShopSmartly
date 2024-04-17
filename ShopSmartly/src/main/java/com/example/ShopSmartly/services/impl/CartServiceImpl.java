@@ -83,8 +83,6 @@ public class CartServiceImpl implements CartService {
     @Override
     public ResponseEntity<?> addProductToCart(CartItemsDto cartDto) {
         Order activeOrder = orderRepository.findByUserIdAndOrderStatus(cartDto.getUserId(), OrderStatus.Pending);
-//        Optional<CartItems> optionalCartItems = cartItemRepository.findByUserIdAndProductIdAndOrderId(
-//                cartDto.getProductId(), cartDto.getUserId(), activeOrder.getId());
 
         List<CartItems> cartItems = cartItemRepository.findByUserIdAndOrderId(cartDto.getUserId(), activeOrder.getId());
         boolean productExistInCart = cartItems.stream()
@@ -99,17 +97,14 @@ public class CartServiceImpl implements CartService {
             if (!optionalProduct.isPresent() || !optionalUser.isPresent()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User or product not found");
             }
-
             Product product = optionalProduct.get();
             UserEntity user = optionalUser.get();
-
             CartItems cart = new CartItems();
             cart.setProduct(product);
             cart.setPrice(product.getPrice());
             cart.setQuantity(1L);
             cart.setUser(user);
             cart.setOrder(activeOrder);
-
             CartItems updatedCart = cartItemRepository.save(cart);
 
             activeOrder.setTotalAmount(activeOrder.getTotalAmount() + cart.getPrice());
@@ -124,14 +119,10 @@ public class CartServiceImpl implements CartService {
         }
     }
 
-
     @Override
     public OrderDto getCartByUserId(Long userId) {
 
         Order activeOrder = orderRepository.findByUserIdAndOrderStatus(userId, OrderStatus.Pending);
-//        if(activeOrder == null || activeOrder.getCartItems().isEmpty()){
-//            return new OrderDto();
-//        }
         List<CartItemsDto> cartItemsDtos = activeOrder.getCartItems().stream().map(CartItems::getCartDto).collect(Collectors.toList());
         OrderDto orderDto = new OrderDto();
         orderDto.setPrice(activeOrder.getPrice());

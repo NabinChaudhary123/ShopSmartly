@@ -35,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> getAllOrdersDesc() {
-        List<Order> sortedOrders = orderRepository.findAll(Sort.by(Sort.Direction.DESC, "date"));
+        List<Order> sortedOrders = orderRepository.findAllByOrderStatusOrderByDateDesc(OrderStatus.Submitted);
         return sortedOrders.stream().map(Order::getOrderDto).collect(Collectors.toList());
     }
 
