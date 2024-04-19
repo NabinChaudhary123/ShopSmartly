@@ -36,11 +36,10 @@ public class UserController {
         UserEntity user = userService.getUserById(userId);
         return ResponseEntity.ok(user);
     }
-//    @GetMapping("/userProfile")
-//    public ResponseEntity<UserEntity> userProfile(){
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        UserEntity user = (UserEntity)authentication.getPrincipal();
-//        return new ResponseEntity<>(user, HttpStatus.OK);
-//    }
+
+    @PutMapping("/updateUser/{userId}")
+    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody UserEntity user){
+        return new ResponseEntity<>(userService.updateUser(userId, user),HttpStatus.CREATED);
+    }
 
 }

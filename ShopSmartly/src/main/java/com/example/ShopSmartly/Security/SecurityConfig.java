@@ -35,9 +35,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/user/**").permitAll()
-                        .requestMatchers("/user/allUsers").hasAuthority("ADMIN")
+//                        .requestMatchers("/user/allUsers").hasAuthority("ADMIN")
                         .requestMatchers("/products/**").permitAll()
-                        .requestMatchers("/cart/postCart","/cart/getCartByUserId/{userId}","/cart/addQuantity","/cart/decreaseQuantity","/cart/placeOrder").permitAll()
+                        .requestMatchers("/cart/**","/cart/getCartByUserId/{userId}").permitAll()
                         .requestMatchers("/order/orderByUserId/{userId}","/order/**").permitAll()
                         .requestMatchers("/web/scrape").permitAll()
                         .anyRequest().authenticated())

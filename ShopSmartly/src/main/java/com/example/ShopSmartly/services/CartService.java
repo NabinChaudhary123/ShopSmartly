@@ -14,7 +14,7 @@ public interface CartService {
     OrderDto getCartByUserId(Long userId);
     OrderDto increaseProductQuantity(AddProductInCartDto addProductInCartDto);
     OrderDto decreaseProductQuantity(AddProductInCartDto addProductInCartDto);
-    OrderDto placeOrder(PlaceOrderDto placeOrderDto);
+
 
 
 }

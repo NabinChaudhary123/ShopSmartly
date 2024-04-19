@@ -20,33 +20,69 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
 
     @Override
     public ResponseEntity<?> scrapeWebForProducts(String query) throws IOException {
+
         StringBuilder result =new StringBuilder();
         try{
-            Document doc = Jsoup.connect("https://www.ebay.com/sch/i.html?_nkw="+query).get();
+            Document doc = Jsoup.connect("https://www.shein.com/search/?q=" + query).get();
             //Extract item elements
-            Elements items = doc.select(".s-item");
+            Elements items = doc.select(".c-goods-list__item");
 
             List<Map<String, String>> productList = new ArrayList<>();
 
             //Iterate over items and extract data
             for(Element item:items){
-            String title =item.select(".s-item__title").text();
-            String price = item.select(".s-item__price").text();
-            String productLink = item.select(".s-item__link").attr("href");
-//            String imageURL = item.select(".s-item__image-img").attr("src");
+                String title = item.select(".c-goods_info_title").text();
+                String price = item.select(".c-goods_price").text();
+                String productLink = item.select(".c-goods_info_title a").attr("href");
+                String imageURL = item.select(".c-goods_img").attr("src");
 
-            // Create a map to strore title and price
+                // Create a map to store title and price
                 Map<String, String> product = new HashMap<>();
                 product.put("title",title);
                 product.put("price", price);
                 product.put("link",productLink);
-//                product.put("imageURL",imageURL);
+                product.put("imageURL",imageURL);
                 productList.add(product);
             }
             return ResponseEntity.ok().body(productList);
         }
         catch (IOException e){
-           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: "+e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: "+e.getMessage());
         }
     }
+
+
+
+
+//    @Override
+//    public ResponseEntity<?> scrapeWebForProducts(String query) throws IOException {
+//        StringBuilder result =new StringBuilder();
+//        try{
+//            Document doc = Jsoup.connect("https://www.etsy.com/search?q="+query).get();
+//            //Extract item elements
+//            Elements items = doc.select(".v2-listing-card");
+//
+//            List<Map<String, String>> productList = new ArrayList<>();
+//
+//            //Iterate over items and extract data
+//            for(Element item:items){
+//                String title =item.select("h3").text();
+//                String price = item.select(".currency-value").text();
+//                String productLink = item.select("a").attr("href");
+//                String imageURL = item.select("img").attr("src");
+//
+//                // Create a map to store title and price
+//                Map<String, String> product = new HashMap<>();
+//                product.put("title",title);
+//                product.put("price", price);
+//                product.put("link",productLink);
+//                product.put("imageURL",imageURL);
+//                productList.add(product);
+//            }
+//            return ResponseEntity.ok().body(productList);
+//        }
+//        catch (IOException e){
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: "+e.getMessage());
+//        }
+//    }
 }

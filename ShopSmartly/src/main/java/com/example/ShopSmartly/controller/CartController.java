@@ -43,16 +43,7 @@ public class CartController {
         return new ResponseEntity<>(orderDto,HttpStatus.OK);
     }
 
-    @PostMapping("/placeOrder")
-    public ResponseEntity<OrderDto> placeOrder(@RequestBody PlaceOrderDto placeOrderDto){
-        OrderDto orderDto = cartService.placeOrder(placeOrderDto);
-        if(orderDto == null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.CREATED).body(orderDto);
-        }
-    }
+
 
 
 }

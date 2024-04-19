@@ -1,8 +1,8 @@
 package com.example.ShopSmartly.controller;
 
 import com.example.ShopSmartly.dto.OrderDto;
-import com.example.ShopSmartly.entity.Order;
-import com.example.ShopSmartly.services.CartService;
+import com.example.ShopSmartly.dto.PlaceOrderDto;
+import com.example.ShopSmartly.services.KhaltiService;
 import com.example.ShopSmartly.services.OrderService;
 import com.example.ShopSmartly.services.PdfGeneratorService;
 import org.springframework.http.HttpStatus;
@@ -18,12 +18,25 @@ public class OrderController {
 
     private final OrderService orderService;
     private final PdfGeneratorService pdf;
+    private final KhaltiService khaltiService;
 
-    public OrderController(OrderService orderService, PdfGeneratorService pdf) {
+    public OrderController(OrderService orderService, PdfGeneratorService pdf, KhaltiService khaltiService) {
         this.orderService = orderService;
         this.pdf = pdf;
+        this.khaltiService = khaltiService;
     }
 
+
+    @PostMapping("/placeOrder")
+    public ResponseEntity<OrderDto> placeOrder(@RequestBody PlaceOrderDto placeOrderDto){
+        OrderDto orderDto = orderService.placeOrder(placeOrderDto);
+        if(orderDto == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.CREATED).body(orderDto);
+        }
+    }
 
     @GetMapping("/orderByUserId/{userId}")
     public ResponseEntity<List<OrderDto>> getOrderByUserId(@PathVariable Long userId){
@@ -55,5 +68,10 @@ public class OrderController {
         }
 
         return ResponseEntity.ok(allOrders);
+    }
+
+    @GetMapping("/pay")
+    public String initiatePayment(){
+        return khaltiService.initiatePayment();
     }
 }

@@ -33,53 +33,7 @@ public class CartServiceImpl implements CartService {
         this.productRepository = productRepository;
     }
 
-    //    @Override
-//    @Transactional
-//    public ResponseEntity<?> addProductToCart(CartItemsDto cartDto) {
-//        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(cartDto.getUserId(), OrderStatus.Pending);
-//        Optional<CartItems> optionalCartItems = cartItemRepository.findByUserIdAndProductIdAndOrderId(
-//                cartDto.getProductId(), cartDto.getUserId(), activeOrder.getId());
-//
-//        if(optionalCartItems.isPresent()){
-//            CartItemsDto productAlreadyExistInCart = new CartItemsDto();
-//            productAlreadyExistInCart.setProductId(null);
-////            return new ResponseEntity<>(productAlreadyExistInCart,HttpStatus.CONFLICT);
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body(productAlreadyExistInCart);
-//        }
-//        else {
-//            Optional<Product> optionalProduct = productRepository.findById(cartDto.getProductId());
-//            Optional<UserEntity> optionalUser = userRepository.findById(cartDto.getUserId());
-//
-//            if(optionalProduct.isPresent() && optionalUser.isPresent()){
-//                CartItems cart = new CartItems();
-//                Product product = optionalProduct.get();
-//                cart.setProduct(product);
-//                cart.setPrice(product.getPrice());
-//                cart.setQuantity(1L);
-//                cart.setUser(optionalUser.get());
-//                cart.setOrder(activeOrder);
-////                cart.setTotalPrice(cartDto.getTotalPrice());
-//
-//                CartItems updatedCart = cartItemRepository.save(cart);
-//
-//                activeOrder.setTotalAmount(activeOrder.getTotalAmount()+cart.getPrice());
-//                activeOrder.setPrice(activeOrder.getPrice()+cart.getPrice());
-//                activeOrder.getCartItems().add(cart);
-//                orderRepository.save(activeOrder);
-//
-//                CartItemsDto updatedCartItemDto = new CartItemsDto();
-//                updatedCartItemDto.setId(updatedCart.getId());
-//
-//                return ResponseEntity.status(HttpStatus.CREATED).body(updatedCartItemDto);
-////                return new ResponseEntity<>(updatedCartItemDto,HttpStatus.CREATED);
-//            }
-//            else{
-////                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User or product not found");
-//                return new ResponseEntity<>("User or product not found!",HttpStatus.NOT_FOUND);
-//            }
-//        }
-//
-//    }
+
     @Override
     public ResponseEntity<?> addProductToCart(CartItemsDto cartDto) {
         Order activeOrder = orderRepository.findByUserIdAndOrderStatus(cartDto.getUserId(), OrderStatus.Pending);
@@ -185,33 +139,5 @@ public class CartServiceImpl implements CartService {
         }
         return null;
     }
-
-
-    @Override
-    public OrderDto placeOrder(PlaceOrderDto placeOrderDto){
-        Order existingOrder = orderRepository.findByUserIdAndOrderStatus(placeOrderDto.getUserId(), OrderStatus.Pending);
-        Optional<UserEntity> optionalUser = userRepository.findById(placeOrderDto.getUserId());
-        if(optionalUser.isPresent()){
-            existingOrder.setDescription(placeOrderDto.getDescription());
-            existingOrder.setAddress(placeOrderDto.getAddress());
-            existingOrder.setDate(new Date());
-            existingOrder.setPaymentType(placeOrderDto.getPayment());
-            existingOrder.setTotalAmount(existingOrder.getTotalAmount());
-            existingOrder.setOrderStatus(OrderStatus.Submitted);
-            orderRepository.save(existingOrder);
-
-            Order order = new Order();
-            order.setPrice(0L);
-            order.setTotalAmount(0L);
-            order.setUser(optionalUser.get());
-            order.setOrderStatus(OrderStatus.Pending);
-            orderRepository.save(order);
-
-            return order.getOrderDto();
-
-        }
-        return null;
-    }
-
 
 }
