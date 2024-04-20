@@ -24,7 +24,8 @@ public class UserController {
 
     @PostMapping("/registerUser")
     public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDto userRegistrationDto){
-       return new ResponseEntity<>(userService.RegisterUser(userRegistrationDto), HttpStatus.CREATED);
+//       return new ResponseEntity<>(userService.RegisterUser(userRegistrationDto), HttpStatus.CREATED);
+        return ResponseEntity.ok(userService.RegisterUser(userRegistrationDto));
     }
     @GetMapping("/allUsers")
     public ResponseEntity<List<UserEntity>> ListAllUsers(){

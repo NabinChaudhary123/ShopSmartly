@@ -8,8 +8,6 @@ import com.example.ShopSmartly.entity.UserEntity;
 import com.example.ShopSmartly.repository.OrderRepository;
 import com.example.ShopSmartly.repository.UserRepository;
 import com.example.ShopSmartly.services.UserService;
-import org.openqa.selenium.NotFoundException;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,7 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public ResponseEntity<?>updateUser(Long userId, UserEntity user){
-        UserEntity existingUser = userRepository.findById(userId).orElseThrow(()-> new NotFoundException("User not found with id: "+userId));
+        UserEntity existingUser = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User not found with id: "+userId));
 
         existingUser.setId(userId);
         existingUser.setFullName(user.getFullName());

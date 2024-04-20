@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/web")
@@ -19,8 +21,10 @@ public class ScrapeProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/scrape")
-    public ResponseEntity<?> scrapeProducts(@RequestParam String query) throws IOException {
-        return ResponseEntity.ok(productService.scrapeWebForProducts(query));
-    }
+//    @GetMapping("/scrape")
+//    public ResponseEntity<?> scrapeProducts(@RequestParam String query) throws IOException {
+//       try{
+//           List<Map>
+//       }
+//    }
 }

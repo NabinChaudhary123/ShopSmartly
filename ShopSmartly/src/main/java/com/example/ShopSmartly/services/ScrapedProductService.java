@@ -6,5 +6,6 @@ import java.io.IOException;
 
 public interface ScrapedProductService {
 
-    ResponseEntity<?> scrapeWebForProducts(String query) throws IOException;
+    ResponseEntity<?>scrapeEbay(String query) throws IOException;
+    ResponseEntity<?> scrapeEtsy(String query) throws IOException;
 }
