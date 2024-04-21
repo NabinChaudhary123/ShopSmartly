@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 public class KhaltiServiceImpl implements KhaltiService {
 
     private final String khaltiApiURL = "https://a.khalti.com/api/v2/epayment/initiate/";
-    private final String khaltiSecretKey = "test_secret_key_6dbe8b98a7504b3ab75be6fbdc8135ed";
+    private final String khaltiSecretKey = "live_secret_key_68791341fdd94846a146f0457ff7b455";
 
     private final RestTemplate restTemplate;
 
