@@ -37,7 +37,6 @@ public class AdminConfiguration {
             }
         };
     }
-
     @Bean
     public RestTemplate restTemplate(){
         return new RestTemplate();

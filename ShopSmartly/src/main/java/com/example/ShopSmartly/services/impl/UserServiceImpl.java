@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public ResponseEntity<?>updateUser(Long userId, UserEntity user){
-        UserEntity existingUser = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User not found with id: "+userId));
+        UserEntity existingUser = userRepository.findById(userId).orElseThrow(()-> new UsernameNotFoundException("User not found with id: "+userId));
 
         existingUser.setId(userId);
         existingUser.setFullName(user.getFullName());

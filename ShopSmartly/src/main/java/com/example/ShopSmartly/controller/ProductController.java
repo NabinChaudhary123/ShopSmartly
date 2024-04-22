@@ -34,7 +34,7 @@ public class ProductController {
 
     @PostMapping("/registerProducts")
     public ResponseEntity<?> registerProducts(@ModelAttribute ProductDto productDto) throws IOException{
-        return new ResponseEntity<>(productService.saveProducts(productDto),HttpStatus.CREATED);
+        return ResponseEntity.ok(productService.saveProducts(productDto));
     }
 
     @DeleteMapping("/deleteProduct/{id}")

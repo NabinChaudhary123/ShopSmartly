@@ -9,8 +9,6 @@ import com.example.ShopSmartly.repository.OrderRepository;
 import com.example.ShopSmartly.repository.UserRepository;
 import com.example.ShopSmartly.services.KhaltiService;
 import com.example.ShopSmartly.services.OrderService;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -42,6 +40,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDto> getAllOrders() {
         return orderRepository.findAllByOrderStatus(OrderStatus.Submitted).stream().map(Order::getOrderDto).collect(Collectors.toList());
+    }
+
+    public List<Order> getTotalOrders(){
+        return orderRepository.findAll();
+    }
+
+    @Override
+    public List<OrderDto> getPendingOrders() {
+        return orderRepository.findAllByOrderStatus(OrderStatus.Pending).stream().map(Order::getOrderDto).collect(Collectors.toList());
     }
 
     @Override

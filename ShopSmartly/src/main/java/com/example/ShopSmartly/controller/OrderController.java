@@ -2,6 +2,7 @@ package com.example.ShopSmartly.controller;
 
 import com.example.ShopSmartly.dto.OrderDto;
 import com.example.ShopSmartly.dto.PlaceOrderDto;
+import com.example.ShopSmartly.entity.Order;
 import com.example.ShopSmartly.services.KhaltiService;
 import com.example.ShopSmartly.services.OrderService;
 import com.example.ShopSmartly.services.PdfGeneratorService;
@@ -44,23 +45,38 @@ public class OrderController {
         return ResponseEntity.ok(orderDtoList);
     }
 
+    // get Submitted orders
     @GetMapping("/allOrders")
     public ResponseEntity<List<OrderDto>> getAllOrders(){
         List<OrderDto> allOrders = orderService.getAllOrders();
         return ResponseEntity.ok(allOrders);
     }
 
+    //get recent orders
     @GetMapping("/allOrdersDesc")
     public ResponseEntity<List<OrderDto>>getAllOrdersDesc(){
         List<OrderDto> allOrdersDesc = orderService.getAllOrdersDesc();
         return ResponseEntity.ok(allOrdersDesc);
     }
 
+    // get total orders - { Pending submitted}
+    @GetMapping("/totalOrders")
+    public ResponseEntity<List<Order>>getTotalOrders(){
+        List<Order> totalOrders = orderService.getTotalOrders();
+        return ResponseEntity.ok(totalOrders);
+    }
+
+    @GetMapping("/pendingOrders")
+    public ResponseEntity<List<OrderDto>>getPendingOrders(){
+        List<OrderDto> totalOrders = orderService.getPendingOrders();
+        return ResponseEntity.ok(totalOrders);
+    }
+
     @GetMapping("/generatePDF")
     public ResponseEntity<List<OrderDto>>generatePdf() throws IOException {
         List<OrderDto> allOrders = orderService.getAllOrders();
         try{
-            String filePath = pdf.generatePdf(allOrders);
+            pdf.generatePdf(allOrders);
         }
         catch (Exception e){
             e.printStackTrace();

@@ -30,6 +30,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ResponseEntity<String> saveProducts(ProductDto productDto) throws IOException {
 
+        if (productRepository.existsByImage(productDto.getImage().getBytes())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Product with the same image already exists");
+        }
            Product product = new Product();
            product.setProductName(productDto.getProductName());
            product.setProductDescription(productDto.getProductDescription());
@@ -38,7 +41,6 @@ public class ProductServiceImpl implements ProductService {
            product.setImage(productDto.getImage().getBytes());
             productRepository.save(product);
            return new ResponseEntity<>("Product is registered", HttpStatus.CREATED);
-
 
     }
 

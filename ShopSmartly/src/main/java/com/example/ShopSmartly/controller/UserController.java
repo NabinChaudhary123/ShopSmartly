@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,14 +34,26 @@ public class UserController {
     }
 
     @GetMapping("/profile/{userId}")
-    public ResponseEntity<UserEntity> getUserById(@PathVariable Long userId){
-        UserEntity user = userService.getUserById(userId);
-        return ResponseEntity.ok(user);
-    }
+    public ResponseEntity<?> getUserById(@PathVariable Long userId){
+        try{
+            UserEntity user = userService.getUserById(userId);
+            return ResponseEntity.ok(user);
+        }
+        catch (UsernameNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User does not exist/ Not found");
+        }
+
+        }
 
     @PutMapping("/updateUser/{userId}")
     public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody UserEntity user){
-        return new ResponseEntity<>(userService.updateUser(userId, user),HttpStatus.CREATED);
+        try{
+            return new ResponseEntity<>(userService.updateUser(userId, user),HttpStatus.CREATED);
+        }
+        catch (UsernameNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User does not exist/ cannot be updated");
+        }
+
     }
 
 }
