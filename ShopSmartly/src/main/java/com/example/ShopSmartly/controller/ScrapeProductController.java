@@ -27,10 +27,12 @@ public class ScrapeProductController {
     @GetMapping("/scrape")
     public ProductResponse scrapeProducts(@RequestParam String query) throws IOException {
        try{
-           List<Map<String, String>> etsyProducts = productService.scrapeEtsy(query);
-           List<Map<String, String>> ebayProducts = productService.scrapeEbay(query);
+           List<Map<String, String>> hmProducts = productService.scrapeHM(query);
+           List<Map<String, String>> fjProducts = productService.scrapeFashionJunkee(query);
+           List<Map<String, String>> abcProducts = productService.scrapeAbercrombie(query);
+           List<Map<String, String>> snapdealProducts = productService.fetchSnapDeal(query);
 
-           return new ProductResponse(ebayProducts,etsyProducts);
+           return new ProductResponse(hmProducts,fjProducts,abcProducts,snapdealProducts);
 
        }
        catch (IOException e){
@@ -41,7 +43,7 @@ public class ScrapeProductController {
 
     @GetMapping("/scrapy")
     public ResponseEntity<?> scrape(@RequestParam String query)throws IOException{
-        return ResponseEntity.ok(productService.scrapealoYoga(query));
+        return ResponseEntity.ok(productService.fetchSnapDeal(query));
     }
 
 }

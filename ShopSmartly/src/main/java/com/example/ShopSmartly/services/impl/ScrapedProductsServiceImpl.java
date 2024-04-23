@@ -32,48 +32,6 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
         // Add more proxy URLs as needed
     }
 
-    //Ebay
-    @Override
-    public List<Map<String, String>> scrapeEbay(String query) throws IOException {
-
-        Random random = new Random();
-        String userAgent = USER_AGENTS.get(random.nextInt(USER_AGENTS.size()));
-        Document doc = Jsoup.connect("https://www.ebay.com/sch/i.html?_nkw="+query)
-                    .userAgent(userAgent)
-                    .get();
-            //Extract item elements
-        Elements items = doc.select("li.s-item");
-
-        String proxyUrl = PROXIES.get(random.nextInt(PROXIES.size()));
-        System.setProperty("http.proxyHost", proxyUrl.split(":")[0]);
-        System.setProperty("http.proxyPort", proxyUrl.split(":")[2]);
-
-        List<Map<String, String>> productList = new ArrayList<>();
-
-            int count = 0;
-            int limit= 10;
-            //Iterate over items and extract data
-            for(Element item:items){
-                if(count>=limit){
-                    break;
-                }
-                String title = item.select(".s-item__title").text().trim();
-                String price = item.select("span.s-item__price").text().trim();
-                String productLink = item.select("a.s-item__link").attr("href").trim();
-                String imageURL = item.select(".s-item__image img").attr("src");
-
-                // Create a map to store title and price
-                Map<String, String> product = new HashMap<>();
-                product.put("title",title);
-                product.put("price", price);
-                product.put("link",productLink);
-                product.put("imageURL",imageURL);
-                productList.add(product);
-                count++;
-            }
-            return productList;
-
-    }
 
 // free people
 //    @Override
@@ -151,30 +109,102 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
 
     // Snapdeal
 
+    @Override
+    public List<Map<String, String>> fetchSnapDeal(String query) throws IOException {
+
+        Random random = new Random();
+        String userAgent = USER_AGENTS.get(random.nextInt(USER_AGENTS.size()));
+
+            Document doc = Jsoup.connect("https://snapdeal.com/search?keyword=" + query)
+                    .userAgent(userAgent)
+                    .get();
+            //Extract item elements
+            Elements items = doc.select(".product-tuple-listing");
+
+            String proxyUrl = PROXIES.get(random.nextInt(PROXIES.size()));
+            System.setProperty("http.proxyHost", proxyUrl.split(":")[0]);
+            System.setProperty("http.proxyPort", proxyUrl.split(":")[2]);
+
+            List<Map<String, String>> productList = new ArrayList<>();
+
+            int limit =4;
+            int count =0;
+            //Iterate over items and extract data
+            for(Element item:items){
+                if(count>=limit){
+                    break;
+                }
+                String title = item.select(".product-title").text();
+                String price = item.select(".product-price").text();
+
+                // Extract the product link
+//                Element productLinkElement = item.select(".product-title a").first();
+                String productLink =item.select("a").attr("href");
+                Element reviewCountElement = doc.selectFirst(".product-rating-count");
+
+                // Extract the text content of the review count element
+                String reviewCountText = reviewCountElement.text();
+
+//                String imageURL = item.select("img").attr("src");
+                String imageURL;
+                if(item.select(".product-image").hasClass("wooble")){
+                    imageURL = item.select(".product-tuple-image img").attr("src");
+                }
+                else{
+                    imageURL = item.select("img").attr("src");
+                }
+
+                // Create a map to store title and price
+                Map<String, String> product = new HashMap<>();
+                product.put("title",title);
+                product.put("price", price);
+                product.put("link",productLink);
+                product.put("imageURL",imageURL);
+                product.put("review",reviewCountText);
+                productList.add(product);
+                count++;
+            }
+            return productList;
+    }
+
+
+//                 ETSY.com
+
 //    @Override
-//    public ResponseEntity<?> scrapeWebForProducts(String query) throws IOException {
+//    public List<Map<String, String>> scrapeEtsy(String query) throws IOException {
 //
-//        StringBuilder result =new StringBuilder();
-//        try{
-//            Document doc = Jsoup.connect("https://snapdeal.com/search?keyword=" + query).get();
+//        try {
+//            Thread.sleep(1000); // Sleep for 1 seconds
+//        } catch (InterruptedException e) {
+//            Thread.currentThread().interrupt();
+//        }
+//        Random random = new Random();
+//        String userAgent = USER_AGENTS.get(random.nextInt(USER_AGENTS.size()));
+//        String proxyUrl = PROXIES.get(random.nextInt(PROXIES.size()));
+//
+//        System.setProperty("http.proxyHost", proxyUrl.split(":")[0]);
+//        System.setProperty("http.proxyPort", proxyUrl.split(":")[2]);
+//
+//            Connection connection = Jsoup.connect("https://www.etsy.com/search?q="+query)
+//                    .userAgent(userAgent);
+//
+//            Document doc = connection.get();
 //            //Extract item elements
-//            Elements items = doc.select(".product-tuple-listing");
+//            Elements items = doc.select(".v2-listing-card");
 //
 //            List<Map<String, String>> productList = new ArrayList<>();
 //
+//            int limit =10;
+//            int count =0;
 //            //Iterate over items and extract data
 //            for(Element item:items){
-//                String title = item.select(".product-title").text();
-//                String price = item.select(".product-price").text();
-//                String productLink = item.select(".product-desc-rating").text();
-////                String imageURL = item.select("img").attr("src");
-//                String imageURL;
-//                if(item.select(".product-image").hasClass("wooble")){
-//                    imageURL = item.select(".product-tuple-image img").attr("src");
+//                if(count>=limit){
+//                    break;
 //                }
-//                else{
-//                    imageURL = item.select("img").attr("src");
-//                }
+//                String title =item.select("h3").text();
+//                String price = item.select(".currency-value").text();
+//                String productLink = item.select("a").attr("href");
+//                String imageURL = item.select("img").attr("src");
 //
 //                // Create a map to store title and price
 //                Map<String, String> product = new HashMap<>();
@@ -183,64 +213,10 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
 //                product.put("link",productLink);
 //                product.put("imageURL",imageURL);
 //                productList.add(product);
+//                count++;
 //            }
-//            return ResponseEntity.ok().body(productList);
-//        }
-//        catch (IOException e){
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: "+e.getMessage());
-//        }
+//            return productList;
 //    }
-
-
-//                 ETSY.com
-
-    @Override
-    public List<Map<String, String>> scrapeEtsy(String query) throws IOException {
-
-        try {
-            Thread.sleep(1000); // Sleep for 1 seconds
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        Random random = new Random();
-        String userAgent = USER_AGENTS.get(random.nextInt(USER_AGENTS.size()));
-        String proxyUrl = PROXIES.get(random.nextInt(PROXIES.size()));
-
-        System.setProperty("http.proxyHost", proxyUrl.split(":")[0]);
-        System.setProperty("http.proxyPort", proxyUrl.split(":")[2]);
-
-            Connection connection = Jsoup.connect("https://www.etsy.com/search?q="+query)
-                    .userAgent(userAgent);
-
-            Document doc = connection.get();
-            //Extract item elements
-            Elements items = doc.select(".v2-listing-card");
-
-            List<Map<String, String>> productList = new ArrayList<>();
-
-            int limit =10;
-            int count =0;
-            //Iterate over items and extract data
-            for(Element item:items){
-                if(count>=limit){
-                    break;
-                }
-                String title =item.select("h3").text();
-                String price = item.select(".currency-value").text();
-                String productLink = item.select("a").attr("href");
-                String imageURL = item.select("img").attr("src");
-
-                // Create a map to store title and price
-                Map<String, String> product = new HashMap<>();
-                product.put("title",title);
-                product.put("price", price);
-                product.put("link",productLink);
-                product.put("imageURL",imageURL);
-                productList.add(product);
-                count++;
-            }
-            return productList;
-    }
 
     //H&M
     @Override
@@ -361,7 +337,7 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
 
     //abercrombie
     @Override
-    public List<Map<String, String>> scrapeNatori(String query) throws IOException {
+    public List<Map<String, String>> scrapeAbercrombie(String query) throws IOException {
 
         try {
             Thread.sleep(1000); // Sleep for 1 seconds
@@ -411,55 +387,52 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
     }
 
 
-    @Override
-    public List<Map<String, String>> scrapealoYoga(String query) throws IOException {
-
-        try {
-            Thread.sleep(1000); // Sleep for 1 seconds
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        Random random = new Random();
-        String userAgent = USER_AGENTS.get(random.nextInt(USER_AGENTS.size()));
-        String proxyUrl = PROXIES.get(random.nextInt(PROXIES.size()));
-
-        System.setProperty("http.proxyHost", proxyUrl.split(":")[0]);
-        System.setProperty("http.proxyPort", proxyUrl.split(":")[2]);
-
-        Connection connection = Jsoup.connect("https://www.aloyoga.com/search?q="+query)
-                .userAgent(userAgent);
-
-        Document doc = connection.get();
-        //Extract item elements
-        Elements items = doc.select(".PlpTile");
-
-        List<Map<String, String>> productList = new ArrayList<>();
-
-        int limit =20;
-        int count =0;
-        //Iterate over items and extract data
-        for(Element item:items){
-            if(count>=limit){
-                break;
-            }
-            Element titleElement = item.selectFirst("h3.styles_product-details__name__4lhUG a");
-            String title = titleElement.text();
-            String productLink = "https://www.everlane.com" + titleElement.attr("href");
-            String price = item.selectFirst("p.styles_product-details__price__02KDd").text();
-            String imageURL = item.select("img.styles_responsive-image__5f_zr").attr("src");
-
-
-
-
-            // Create a map to store title and price
-            Map<String, String> product = new HashMap<>();
-            product.put("title",title);
-            product.put("price", price);
-            product.put("link",productLink);
-            product.put("imageURL",imageURL);
-            productList.add(product);
-            count++;
-        }
-        return productList;
-    }
+//    @Override
+//    public List<Map<String, String>> scrapealoYoga(String query) throws IOException {
+//
+//        try {
+//            Thread.sleep(1000); // Sleep for 1 seconds
+//        } catch (InterruptedException e) {
+//            Thread.currentThread().interrupt();
+//        }
+//        Random random = new Random();
+//        String userAgent = USER_AGENTS.get(random.nextInt(USER_AGENTS.size()));
+//        String proxyUrl = PROXIES.get(random.nextInt(PROXIES.size()));
+//
+//        System.setProperty("http.proxyHost", proxyUrl.split(":")[0]);
+//        System.setProperty("http.proxyPort", proxyUrl.split(":")[2]);
+//
+//        Connection connection = Jsoup.connect("https://www.aloyoga.com/search?q="+query)
+//                .userAgent(userAgent);
+//
+//        Document doc = connection.get();
+//        //Extract item elements
+//        Elements items = doc.select(".PlpTile");
+//
+//        List<Map<String, String>> productList = new ArrayList<>();
+//
+//        int limit =20;
+//        int count =0;
+//        //Iterate over items and extract data
+//        for(Element item:items){
+//            if(count>=limit){
+//                break;
+//            }
+//            Element titleElement = item.selectFirst("h3.styles_product-details__name__4lhUG a");
+//            String title = titleElement.text();
+//            String productLink = "https://www.everlane.com" + titleElement.attr("href");
+//            String price = item.selectFirst("p.styles_product-details__price__02KDd").text();
+//            String imageURL = item.select("img.styles_responsive-image__5f_zr").attr("src");
+//
+//            // Create a map to store title and price
+//            Map<String, String> product = new HashMap<>();
+//            product.put("title",title);
+//            product.put("price", price);
+//            product.put("link",productLink);
+//            product.put("imageURL",imageURL);
+//            productList.add(product);
+//            count++;
+//        }
+//        return productList;
+//    }
 }

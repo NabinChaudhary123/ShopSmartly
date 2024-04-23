@@ -26,9 +26,11 @@ public class AdminConfiguration {
         return args ->{
             String defaultAdminEmail = "admin@gmail.com";
             String defaultAdminPassword = "default@admin.com";
+            String defaultAdminName = "Admin";
 
             if(userRepository.findByEmail(defaultAdminEmail).isEmpty()){
                 UserEntity admin = new UserEntity();
+                admin.setFullName(defaultAdminName);
                 admin.setEmail(defaultAdminEmail);
                 admin.setPassword(passwordEncoder.encode(defaultAdminPassword));
                 admin.setRole(Role.ADMIN);
