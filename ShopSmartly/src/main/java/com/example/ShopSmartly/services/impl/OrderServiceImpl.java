@@ -2,18 +2,22 @@ package com.example.ShopSmartly.services.impl;
 
 import com.example.ShopSmartly.dto.OrderDto;
 import com.example.ShopSmartly.dto.PlaceOrderDto;
+import com.example.ShopSmartly.entity.Invoice;
 import com.example.ShopSmartly.entity.Order;
 import com.example.ShopSmartly.entity.OrderStatus;
 import com.example.ShopSmartly.entity.UserEntity;
+import com.example.ShopSmartly.repository.InvoiceRepository;
 import com.example.ShopSmartly.repository.OrderRepository;
 import com.example.ShopSmartly.repository.UserRepository;
 import com.example.ShopSmartly.services.KhaltiService;
 import com.example.ShopSmartly.services.OrderService;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,12 +25,13 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
-    private final KhaltiService khaltiService;
+    private final InvoiceRepository invoiceRepository;
 
-    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, KhaltiService khaltiService) {
+    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, InvoiceRepository invoiceRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
-        this.khaltiService = khaltiService;
+        this.invoiceRepository = invoiceRepository;
+
     }
 
     @Override
@@ -70,6 +75,9 @@ public class OrderServiceImpl implements OrderService {
             existingOrder.setOrderStatus(OrderStatus.Submitted);
             orderRepository.save(existingOrder);
 
+            Invoice invoice = generateInvoice(existingOrder);
+            invoiceRepository.save(invoice);
+
             Order order = new Order();
             order.setPrice(0L);
             order.setTotalAmount(0L);
@@ -77,11 +85,25 @@ public class OrderServiceImpl implements OrderService {
             order.setOrderStatus(OrderStatus.Pending);
             orderRepository.save(order);
 
-//            ResponseEntity<String> khaltiResponse = khaltiService.initiatePayment(order.getOrderDto());
             return order.getOrderDto();
-//            return new OrderDto();
         }
         return null;
+    }
+
+    public Invoice generateInvoice(Order order){
+        Invoice invoice = new Invoice();
+        invoice.setInvoiceNumber(generateInvoiceNum());
+        invoice.setTotalAmount(order.getTotalAmount());
+        invoice.setInvoiceDate(new Date());
+        invoice.setOrder(order);
+
+        return invoice;
+    }
+
+    private String generateInvoiceNum() {
+        // Implement logic to generate a unique invoice number
+        // For example: you can concatenate the current date with a random number
+        return "INV-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + "-" + UUID.randomUUID().toString().substring(0, 8);
     }
 
 

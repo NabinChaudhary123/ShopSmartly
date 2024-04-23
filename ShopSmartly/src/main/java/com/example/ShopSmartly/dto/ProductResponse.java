@@ -14,22 +14,21 @@ public class ProductResponse {
 
     private List<Map<String, String>> hmProducts;
     private List<Map<String, String>> fjProducts;
+    private List<Map<String, String>> abcProducts;
+    private List<Map<String, String>> snapdealProducts;
+    private List<Map<String, String>> saltSurfProducts;
+//    private List<Map<String, String>> freePeopleProducts;
 
-    public ProductResponse(List<Map<String, String>> hmProducts,
-                           List<Map<String, String>> fjProducts,
-                           List<Map<String, String>> abcProducts,
-                           List<Map<String, String>> snapdealProducts) {
+    public ProductResponse(List<Map<String, String>> hmProducts, List<Map<String, String>> fjProducts, List<Map<String, String>> abcProducts, List<Map<String, String>> snapdealProducts, List<Map<String, String>> saltSurfProducts) {
         this.hmProducts = hmProducts;
         this.fjProducts = fjProducts;
         this.abcProducts = abcProducts;
         this.snapdealProducts = snapdealProducts;
+        this.saltSurfProducts = saltSurfProducts;
+//        this.freePeopleProducts = freePeopleProducts;
     }
 
-    private List<Map<String, String>> abcProducts;
-    private List<Map<String, String>> snapdealProducts;
-
-
-//    public String comparePrices(){
+    //    public String comparePrices(){
 //        double ebayTotalPrice = 0;
 //        for(Map<String,String>ebay:ebayProducts){
 //            ebayTotalPrice +=Double.parseDouble(ebay.get("price").replaceAll("[^\\d]",""));

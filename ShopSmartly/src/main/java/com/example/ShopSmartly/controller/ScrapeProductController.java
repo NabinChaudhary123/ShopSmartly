@@ -31,8 +31,10 @@ public class ScrapeProductController {
            List<Map<String, String>> fjProducts = productService.scrapeFashionJunkee(query);
            List<Map<String, String>> abcProducts = productService.scrapeAbercrombie(query);
            List<Map<String, String>> snapdealProducts = productService.fetchSnapDeal(query);
+           List<Map<String, String>> saltSurfProducts = productService.fetchSaltSurf(query);
+//           List<Map<String, String>> freePeopleProducts = productService.fetchFreePeople(query);
 
-           return new ProductResponse(hmProducts,fjProducts,abcProducts,snapdealProducts);
+           return new ProductResponse(hmProducts,fjProducts,abcProducts,snapdealProducts,saltSurfProducts);
 
        }
        catch (IOException e){

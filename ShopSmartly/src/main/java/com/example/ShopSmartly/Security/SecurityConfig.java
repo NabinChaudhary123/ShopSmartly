@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/cart/**","/cart/getCartByUserId/{userId}").permitAll()
                         .requestMatchers("/order/orderByUserId/{userId}","/order/**").permitAll()
                         .requestMatchers("/web/**").permitAll()
+                        .requestMatchers("/invoices/totalInvoices").permitAll()
                         .anyRequest().authenticated())
                 .userDetailsService(userDetailsService)
                 .httpBasic(Customizer.withDefaults())

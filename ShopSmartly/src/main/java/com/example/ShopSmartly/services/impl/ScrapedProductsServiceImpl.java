@@ -33,21 +33,32 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
     }
 
 
-// free people
+// free people - Url failure
 //    @Override
-//    public ResponseEntity<?> scrapeWebForProducts(String query) throws IOException {
+//    public List<Map<String, String>> fetchFreePeople(String query) throws IOException {
 //        StringBuilder result =new StringBuilder();
-//        try{
+//
+//        Random random = new Random();
+//        String userAgent = USER_AGENTS.get(random.nextInt(USER_AGENTS.size()));
 //            Document doc = Jsoup.connect("https://www.freepeople.com/search?q="+query)
-//                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
+////                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
+//                    .userAgent(userAgent)
 //                    .get();
 //            //Extract item elements
 //            Elements items = doc.select(".c-pwa-tile-grid-tile");
 //
-//            List<Map<String, String>> productList = new ArrayList<>();
+//        String proxyUrl = PROXIES.get(random.nextInt(PROXIES.size()));
+//        System.setProperty("http.proxyHost", proxyUrl.split(":")[0]);
+//        System.setProperty("http.proxyPort", proxyUrl.split(":")[2]);
 //
+//            List<Map<String, String>> productList = new ArrayList<>();
+//            int limit =4;
+//            int count =0;
 //            //Iterate over items and extract data
 //            for(Element item:items){
+//                if(count>=limit){
+//                    break;
+//                }
 //                String title = item.select(".o-pwa-product-tile__heading").text();
 //                String price = item.select(".c-pwa-product-price__current").text();
 //                String imageURL = item.select(".o-pwa-product-tile__media img").attr("src");
@@ -61,50 +72,53 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
 //                product.put("link",productLink);
 //                product.put("imageURL",imageURL);
 //                productList.add(product);
+//                count++;
 //            }
-//            return ResponseEntity.ok().body(productList);
-//        }
-//        catch (IOException e){
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: "+e.getMessage());
-//        }
+//            return productList;
+//
+//
 //    }
 
     //salt surf less products
-//    @Override
-//    public ResponseEntity<?> scrapeWebForProducts(String query) throws IOException {
-//        StringBuilder result =new StringBuilder();
-//        try{
-//            Document doc = Jsoup.connect("https://www.saltsurf.com/search?type=product&q="+query).get();
-//            //Extract item elements
-//            Elements items = doc.select(".product-block");
-//
-//            List<Map<String, String>> productList = new ArrayList<>();
-//
-//            //Iterate over items and extract data
-//            for(Element item:items){
-//                String title = item.select(".title").text();
-////                String availability = item.select(".bold").text();
-//                String price = item.select(".theme-money").first().text();
-////                String originalPrice = item.select(".was-price.theme-money").first().text();
-//                String imageURL = item.select(".rimage__image").attr("src");
-//                String productLink = "https://www.saltsurf.com/"+item.select("a.image-inner").attr("href");
-//
-//
-//
-//                // Create a map to store title and price
-//                Map<String, String> product = new HashMap<>();
-//                product.put("title",title);
-//                product.put("price", price);
-//                product.put("link",productLink);
-//                product.put("imageURL",imageURL);
-//                productList.add(product);
-//            }
-//            return ResponseEntity.ok().body(productList);
-//        }
-//        catch (IOException e){
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: "+e.getMessage());
-//        }
-//    }
+    @Override
+    public List<Map<String, String>> fetchSaltSurf(String query) throws IOException {
+
+            Random random = new Random();
+            String userAgent = USER_AGENTS.get(random.nextInt(USER_AGENTS.size()));
+            Document doc = Jsoup.connect("https://www.saltsurf.com/search?type=product&q="+query)
+                    .userAgent(userAgent).get();
+            //Extract item elements
+            Elements items = doc.select(".product-block");
+
+        String proxyUrl = PROXIES.get(random.nextInt(PROXIES.size()));
+        System.setProperty("http.proxyHost", proxyUrl.split(":")[0]);
+        System.setProperty("http.proxyPort", proxyUrl.split(":")[2]);
+
+            List<Map<String, String>> productList = new ArrayList<>();
+
+            //Iterate over items and extract data
+            for(Element item:items){
+                String title = item.select(".title").text();
+//                String availability = item.select(".bold").text();
+                String price = item.select(".theme-money").first().text();
+//                String originalPrice = item.select(".was-price.theme-money").first().text();
+                String imageURL = item.select(".rimage__image").attr("src");
+                String productLink = "https://www.saltsurf.com/"+item.select("a.image-inner").attr("href");
+
+
+
+                // Create a map to store title and price
+                Map<String, String> product = new HashMap<>();
+                product.put("title",title);
+                product.put("price", price);
+                product.put("link",productLink);
+                product.put("imageURL",imageURL);
+                productList.add(product);
+            }
+            return productList;
+
+
+    }
 
 
     // Snapdeal
@@ -167,56 +181,6 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
             return productList;
     }
 
-
-//                 ETSY.com
-
-//    @Override
-//    public List<Map<String, String>> scrapeEtsy(String query) throws IOException {
-//
-//        try {
-//            Thread.sleep(1000); // Sleep for 1 seconds
-//        } catch (InterruptedException e) {
-//            Thread.currentThread().interrupt();
-//        }
-//        Random random = new Random();
-//        String userAgent = USER_AGENTS.get(random.nextInt(USER_AGENTS.size()));
-//        String proxyUrl = PROXIES.get(random.nextInt(PROXIES.size()));
-//
-//        System.setProperty("http.proxyHost", proxyUrl.split(":")[0]);
-//        System.setProperty("http.proxyPort", proxyUrl.split(":")[2]);
-//
-//            Connection connection = Jsoup.connect("https://www.etsy.com/search?q="+query)
-//                    .userAgent(userAgent);
-//
-//            Document doc = connection.get();
-//            //Extract item elements
-//            Elements items = doc.select(".v2-listing-card");
-//
-//            List<Map<String, String>> productList = new ArrayList<>();
-//
-//            int limit =10;
-//            int count =0;
-//            //Iterate over items and extract data
-//            for(Element item:items){
-//                if(count>=limit){
-//                    break;
-//                }
-//                String title =item.select("h3").text();
-//                String price = item.select(".currency-value").text();
-//                String productLink = item.select("a").attr("href");
-//                String imageURL = item.select("img").attr("src");
-//
-//                // Create a map to store title and price
-//                Map<String, String> product = new HashMap<>();
-//                product.put("title",title);
-//                product.put("price", price);
-//                product.put("link",productLink);
-//                product.put("imageURL",imageURL);
-//                productList.add(product);
-//                count++;
-//            }
-//            return productList;
-//    }
 
     //H&M
     @Override
@@ -360,7 +324,7 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
 
         List<Map<String, String>> productList = new ArrayList<>();
 
-        int limit =20;
+        int limit =12;
         int count =0;
         //Iterate over items and extract data
         for(Element item:items){
