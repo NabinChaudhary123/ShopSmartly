@@ -100,7 +100,6 @@ public class CartServiceImpl implements CartService {
             CartItems cartItems = optionalCartItems.get();
             Product product = optionalProduct.get();
 
-//            cartItems.setTotalPrice(product.getPrice() * cartItems.getQuantity());
 
             activeOrder.setPrice(activeOrder.getPrice()+product.getPrice());
             activeOrder.setTotalAmount(activeOrder.getTotalAmount()+product.getPrice());

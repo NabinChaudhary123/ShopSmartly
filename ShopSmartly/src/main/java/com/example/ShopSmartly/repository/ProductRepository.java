@@ -16,4 +16,6 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     boolean existsByImage(byte[] bytes);
 
+    boolean existsByProductName(String testProduct);
+
 }

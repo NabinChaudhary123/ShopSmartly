@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
+@Getter
+@Setter
 @Data
 @Entity
 @Table(name = "orders")
