@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 @Getter
@@ -17,17 +16,16 @@ public class ProductResponse {
     private List<Map<String, String>> abcProducts;
     private List<Map<String, String>> snapdealProducts;
     private List<Map<String, String>> saltSurfProducts;
-//    private List<Map<String, String>> freePeopleProducts;
+    private List<Map<String, String>> freePeopleProducts;
 
-    public ProductResponse(List<Map<String, String>> hmProducts, List<Map<String, String>> fjProducts, List<Map<String, String>> abcProducts, List<Map<String, String>> snapdealProducts, List<Map<String, String>> saltSurfProducts) {
+    public ProductResponse(List<Map<String, String>> hmProducts, List<Map<String, String>> fjProducts, List<Map<String, String>> abcProducts, List<Map<String, String>> snapdealProducts, List<Map<String, String>> saltSurfProducts, List<Map<String, String>> freePeopleProducts) {
         this.hmProducts = hmProducts;
         this.fjProducts = fjProducts;
         this.abcProducts = abcProducts;
         this.snapdealProducts = snapdealProducts;
         this.saltSurfProducts = saltSurfProducts;
-//        this.freePeopleProducts = freePeopleProducts;
+        this.freePeopleProducts = freePeopleProducts;
     }
-
     //    public String comparePrices(){
 //        double ebayTotalPrice = 0;
 //        for(Map<String,String>ebay:ebayProducts){

@@ -34,50 +34,47 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
 
 
 // free people - Url failure
-//    @Override
-//    public List<Map<String, String>> fetchFreePeople(String query) throws IOException {
-//        StringBuilder result =new StringBuilder();
-//
-//        Random random = new Random();
-//        String userAgent = USER_AGENTS.get(random.nextInt(USER_AGENTS.size()));
-//            Document doc = Jsoup.connect("https://www.freepeople.com/search?q="+query)
-////                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
-//                    .userAgent(userAgent)
-//                    .get();
-//            //Extract item elements
-//            Elements items = doc.select(".c-pwa-tile-grid-tile");
-//
-//        String proxyUrl = PROXIES.get(random.nextInt(PROXIES.size()));
-//        System.setProperty("http.proxyHost", proxyUrl.split(":")[0]);
-//        System.setProperty("http.proxyPort", proxyUrl.split(":")[2]);
-//
-//            List<Map<String, String>> productList = new ArrayList<>();
-//            int limit =4;
-//            int count =0;
-//            //Iterate over items and extract data
-//            for(Element item:items){
-//                if(count>=limit){
-//                    break;
-//                }
-//                String title = item.select(".o-pwa-product-tile__heading").text();
-//                String price = item.select(".c-pwa-product-price__current").text();
-//                String imageURL = item.select(".o-pwa-product-tile__media img").attr("src");
-//                String productLink = item.select(".c-pwa-link").attr("href");
-//
-//
-//                // Create a map to store title and price
-//                Map<String, String> product = new HashMap<>();
-//                product.put("title",title);
-//                product.put("price", price);
-//                product.put("link",productLink);
-//                product.put("imageURL",imageURL);
-//                productList.add(product);
-//                count++;
-//            }
-//            return productList;
-//
-//
-//    }
+    @Override
+    public List<Map<String, String>> fetchFreePeople(String query) throws IOException {
+
+        Random random = new Random();
+        String userAgent = USER_AGENTS.get(random.nextInt(USER_AGENTS.size()));
+            Document doc = Jsoup.connect("https://www.freepeople.com/search?q="+query)
+//                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
+                    .userAgent(userAgent)
+                    .get();
+            //Extract item elements
+            Elements items = doc.select(".c-pwa-tile-grid-tile");
+
+        String proxyUrl = PROXIES.get(random.nextInt(PROXIES.size()));
+        System.setProperty("http.proxyHost", proxyUrl.split(":")[0]);
+        System.setProperty("http.proxyPort", proxyUrl.split(":")[2]);
+
+            List<Map<String, String>> productList = new ArrayList<>();
+            int limit =4;
+            int count =0;
+            //Iterate over items and extract data
+            for(Element item:items){
+                if(count>=limit){
+                    break;
+                }
+                String title = item.select(".o-pwa-product-tile__heading").text();
+                String price = item.select(".c-pwa-product-price__current").text();
+                String imageURL = item.select(".o-pwa-product-tile__media img").attr("src");
+                String productLink = item.select(".c-pwa-link").attr("href");
+
+
+                // Create a map to store title and price
+                Map<String, String> product = new HashMap<>();
+                product.put("title",title);
+                product.put("price", price);
+                product.put("link",productLink);
+                product.put("imageURL",imageURL);
+                productList.add(product);
+                count++;
+            }
+            return productList;
+    }
 
     //salt surf less products
     @Override
@@ -121,7 +118,7 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
     }
 
 
-    // Snapdeal
+    // Snapdeal -> no ratings
 
     @Override
     public List<Map<String, String>> fetchSnapDeal(String query) throws IOException {
@@ -158,6 +155,10 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
 
                 // Extract the text content of the review count element
                 String reviewCountText = reviewCountElement.text();
+                // Extract ratings number
+                String ratings = item.select(".filled-stars").attr("style");
+                // Parse ratings from style attribute
+                String ratingsNumber = ratings.substring(ratings.indexOf(':') + 1, ratings.indexOf('%'));
 
 //                String imageURL = item.select("img").attr("src");
                 String imageURL;
@@ -175,6 +176,7 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
                 product.put("link",productLink);
                 product.put("imageURL",imageURL);
                 product.put("review",reviewCountText);
+                product.put("ratings",ratings);
                 productList.add(product);
                 count++;
             }
@@ -218,7 +220,7 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
             String price = item.select(".item-price").text();
             String productLink ="https://www2.hm.com/"+ item.select("a").attr("href");
             String imageURL = item.select("img").attr("src");
-            String rating = scrapeRating(productLink);
+//            String rating = scrapeRating(productLink);
 
             // Create a map to store title and price
             Map<String, String> product = new HashMap<>();
@@ -226,7 +228,7 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
             product.put("price", price);
             product.put("link",productLink);
             product.put("imageURL",imageURL);
-            product.put("rating",rating);
+//            product.put("rating",rating);
             productList.add(product);
             count++;
         }
@@ -234,21 +236,21 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
     }
 
     // ratings
-    private String scrapeRating(String productLink) throws IOException{
-        Connection connection = Jsoup.connect(productLink);
-        Document doc = connection.get();
-        Element ratingElement = doc.select(".d1cd7b").first();
-//        String rating = "N/A";
-        if(ratingElement != null){
-            String ariaLabel = ratingElement.attr("aria-label");
-            return ariaLabel.split(" ")[0];
-        }
-        else{
-            return "N/A";
-        }
-    }
+//    private String scrapeRating(String productLink) throws IOException{
+//        Connection connection = Jsoup.connect(productLink);
+//        Document doc = connection.get();
+//        Element ratingElement = doc.select(".d1cd7b").first();
+////        String rating = "N/A";
+//        if(ratingElement != null){
+//            String ariaLabel = ratingElement.attr("aria-label");
+//            return ariaLabel.split(" ")[0];
+//        }
+//        else{
+//            return "N/A";
+//        }
+//    }
 
-    //fashionjunkee
+    //fashionjunkee has some problems with pants/ has no ratings and reviews
     @Override
     public List<Map<String, String>> scrapeFashionJunkee(String query) throws IOException {
 
@@ -299,7 +301,7 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
         return productList;
     }
 
-    //abercrombie
+    //abercrombie has no ratnigs and reviews
     @Override
     public List<Map<String, String>> scrapeAbercrombie(String query) throws IOException {
 
@@ -349,6 +351,73 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
         }
         return productList;
     }
+
+    // macys work better
+    @Override
+    public List<Map<String, String>> scrapeMacys(String query) throws IOException {
+
+        try {
+            Thread.sleep(1000); // Sleep for 1 second
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        Random random = new Random();
+        String userAgent = USER_AGENTS.get(random.nextInt(USER_AGENTS.size()));
+        String proxyUrl = PROXIES.get(random.nextInt(PROXIES.size()));
+
+        System.setProperty("http.proxyHost", proxyUrl.split(":")[0]);
+        System.setProperty("http.proxyPort", proxyUrl.split(":")[2]);
+
+        // Construct the URL for Macy's search
+        String searchUrl = "https://www.macys.com/shop/featured/" + query;
+
+        Connection connection = Jsoup.connect(searchUrl).userAgent(userAgent);
+
+        Document doc = connection.get();
+
+        // Extract item elements
+        Elements items = doc.select("div.productThumbnail");
+
+        List<Map<String, String>> productList = new ArrayList<>();
+
+        int limit = 9;
+        int count = 0;
+
+        // Iterate over items and extract data
+        for (Element item : items) {
+            if (count >= limit) {
+                break;
+            }
+
+            Element titleElement = item.selectFirst("div.productDescription > a.productDescLink > div.productBrand");
+            String brand = titleElement.text();
+            Element titleDescElement = item.selectFirst("div.productDescription > a.productDescLink");
+            String title = brand + " " + titleDescElement.text();
+            String productLink = "https://www.macys.com" + titleDescElement.attr("href");
+            String price = item.selectFirst("div.priceInfo > div.prices > div > span.regular").text();
+            String imageURL = item.select("div.productThumbnailImage > a > div > picture > img").attr("src");
+
+            String ratings = item.selectFirst("div.stars").attr("aria-label");
+            // Extract reviews count
+            String reviews = item.selectFirst("span.aggregateCount").text();
+
+            // Create a map to store title, price, link, and image URL
+            Map<String, String> product = new HashMap<>();
+            product.put("title", title);
+            product.put("price", price);
+            product.put("link", productLink);
+            product.put("imageURL", imageURL);
+            product.put("ratings", ratings);
+            product.put("reviews", reviews);
+            productList.add(product);
+
+            count++;
+        }
+
+        return productList;
+    }
+
 
 
 //    @Override
