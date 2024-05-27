@@ -14,7 +14,7 @@ public interface ScrapedProductService {
     CompletableFuture<List<Map<String, String>>> fetchFashionJunkeeAsync(String query);
     CompletableFuture<List<Map<String, String>>> fetchAberCrombieAsync(String query);
     CompletableFuture<List<Map<String, String>>> fetchMacysAsync(String query);
-    List<Map<String, String>> scrapeMacys(String query) throws IOException;
+//    List<Map<String, String>> scrapeMacys(String query) throws IOException;
 //    List<Map<String, String>> fetchFreePeople(String query) throws IOException;
 //    List<Map<String, String>> scrapealoYoga(String query) throws IOException;
 }

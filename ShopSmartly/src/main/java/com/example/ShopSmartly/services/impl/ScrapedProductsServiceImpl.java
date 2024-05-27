@@ -10,13 +10,10 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.safety.Safelist;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.net.http.HttpClient;
-import java.net.http.HttpResponse;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -44,10 +41,6 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
         // Add more proxy URLs as needed
     }
 
-    //sanitizing data
-//    private String sanitize(String input) {
-//        return Jsoup.clean(input, Safelist.basic());
-//    }
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
@@ -192,10 +185,6 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
         finally {
             httpGet.releaseConnection();
         }
-
-
-
-
     }
 
     //salt surf less products
@@ -238,16 +227,15 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
 
         Random random = new Random();
         String userAgent = USER_AGENTS.get(random.nextInt(USER_AGENTS.size()));
+        String proxyUrl = PROXIES.get(random.nextInt(PROXIES.size()));
+        System.setProperty("http.proxyHost", proxyUrl.split(":")[0]);
+        System.setProperty("http.proxyPort", proxyUrl.split(":")[2]);
 
             Document doc = Jsoup.connect("https://snapdeal.com/search?keyword=" + query)
                     .userAgent(userAgent)
                     .get();
             //Extract item elements
             Elements items = doc.select(".product-tuple-listing");
-
-            String proxyUrl = PROXIES.get(random.nextInt(PROXIES.size()));
-            System.setProperty("http.proxyHost", proxyUrl.split(":")[0]);
-            System.setProperty("http.proxyPort", proxyUrl.split(":")[2]);
 
             List<Map<String, String>> productList = new ArrayList<>();
 
@@ -263,15 +251,22 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
 
                 // Extract the product link
                 String productLink =item.select("a").attr("href");
-                Element reviewCountElement = doc.selectFirst(".product-rating-count");
+                Element reviewCountElement = item.selectFirst(".product-rating-count");
 
                 // Extract the text content of the review count element
-                assert reviewCountElement != null;
-                String reviewCountText = reviewCountElement.text();
+                String reviewCountText = (reviewCountElement != null)? reviewCountElement.text() : "No reviews";
                 // Extract ratings number
-                String ratings = item.select(".filled-stars").attr("style");
+//                String ratings = item.select(".filled-stars").attr("style");
+//                String ratingsNumber = "No ratings";
+//                if (ratings != null && ratings.contains(":") && ratings.contains("%")) {
+//                    try {
+//                        ratingsNumber = ratings.substring(ratings.indexOf(':') + 1, ratings.indexOf('%')).trim();
+//                    } catch (IndexOutOfBoundsException e) {
+//                        ratingsNumber = "No ratings";
+//                    }
+//                }
                 // Parse ratings from style attribute
-                String ratingsNumber = ratings.substring(ratings.indexOf(':') + 1, ratings.indexOf('%'));
+//                String ratingsNumber = ratings.substring(ratings.indexOf(':') + 1, ratings.indexOf('%'));
 
                 String imageURL;
                 if(item.select(".product-image").hasClass("wooble")){
@@ -288,7 +283,7 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
                 product.put("link",productLink);
                 product.put("imageURL",imageURL);
                 product.put("review",reviewCountText);
-                product.put("ratings",ratings);
+//                product.put("ratings",ratings);
                 productList.add(product);
                 count++;
             }
@@ -377,7 +372,13 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
             }
             String title = item.select(".name a").text();
             String price = item.select(".price").text();
-            price = price.split(" ")[3];
+//            price = price.split(" ")[3];
+            String[] priceParts = price.split(" ");
+            if (priceParts.length >= 4) {
+                price = priceParts[3];
+            } else {
+                price = "Price not available"; // Default value if price format is unexpected
+            }
             String productLink = "https://www.fashionjunkee.com/" + item.select(".name a").attr("href");
             String imageURL = item.select(".img img").attr("src");
 
@@ -481,16 +482,17 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
             }
 
             Element titleElement = item.selectFirst("div.productDescription > a.productDescLink > div.productBrand");
-            String brand = titleElement.text();
+            String brand = titleElement != null ? titleElement.text(): "Unknown Brand";
             Element titleDescElement = item.selectFirst("div.productDescription > a.productDescLink");
+            assert titleDescElement != null;
             String title = brand + " " + titleDescElement.text();
             String productLink = "https://www.macys.com" + titleDescElement.attr("href");
-            String price = item.selectFirst("div.priceInfo > div.prices > div > span.regular").text();
+            String price = Objects.requireNonNull(item.selectFirst("div.priceInfo > div.prices > div > span.regular")).text();
             String imageURL = item.select("div.productThumbnailImage > a > div > picture > img").attr("src");
 
-            String ratings = item.selectFirst("div.stars").attr("aria-label");
+            String ratings = Objects.requireNonNull(item.selectFirst("div.stars")).attr("aria-label");
             // Extract reviews count
-            String reviews = item.selectFirst("span.aggregateCount").text();
+            String reviews = Objects.requireNonNull(item.selectFirst("span.aggregateCount")).text();
 
             // Create a map to store title, price, link, and image URL
             Map<String, String> product = new HashMap<>();

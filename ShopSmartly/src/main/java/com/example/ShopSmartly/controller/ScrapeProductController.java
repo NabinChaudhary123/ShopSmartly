@@ -54,9 +54,9 @@ public class ScrapeProductController {
 
     }
 
-    @GetMapping("/scrapy")
-    public ResponseEntity<?> scrape(@RequestParam String query)throws IOException {
-        return ResponseEntity.ok(productService.scrapeMacys(query));
-    }
+//    @GetMapping("/scrapy")
+//    public ResponseEntity<?> scrape(@RequestParam String query)throws IOException {
+//        return ResponseEntity.ok(productService.scrapeMacys(query));
+//    }
 
 }

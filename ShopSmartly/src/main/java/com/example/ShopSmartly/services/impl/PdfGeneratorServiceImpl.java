@@ -4,16 +4,11 @@ import com.example.ShopSmartly.dto.OrderDto;
 import com.example.ShopSmartly.services.PdfGeneratorService;
 import com.lowagie.text.DocumentException;
 import org.springframework.stereotype.Service;
-import org.xhtmlrenderer.pdf.ITextFontContext;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import javax.swing.*;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -38,11 +33,18 @@ public class PdfGeneratorServiceImpl implements PdfGeneratorService {
     }
     private String generateHTMLContent(List<OrderDto>orders){
         StringBuilder html = new StringBuilder();
-        html.append("<html><body>");
-        html.append("<h1>Hola</h1>");
-        html.append("<table border='1'>");
+
+        html.append("<html><head><style>");
+        html.append("body { font-family: Arial, sans-serif; }");
+        html.append("h1 { color: #333; text-align: center; }");
+        html.append("table { width: 100%; border-collapse: collapse; margin-top: 20px; }");
+        html.append("th, td { padding: 8px; text-align: left; border: 1px solid #ddd; }");
+        html.append("th { background-color: #f2f2f2; }");
+        html.append("</style></head><body>");
+        html.append("<h1>Order Details</h1>");
+        html.append("<table>");
         html.append("<tr><th>Order ID</th><th>Customer</th><th>Description</th><th>Order Status</th><th>Price</th><th>Payment Type</th><th>Address</th><th>Date</th></tr>");
-        for(OrderDto order:orders){
+        for (OrderDto order : orders) {
             html.append("<tr>");
             html.append("<td>").append(order.getId()).append("</td>");
             html.append("<td>").append(order.getFullName()).append("</td>");
