@@ -148,6 +148,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>ShopSmartly</finalName>
 	</build>
 
 </project>

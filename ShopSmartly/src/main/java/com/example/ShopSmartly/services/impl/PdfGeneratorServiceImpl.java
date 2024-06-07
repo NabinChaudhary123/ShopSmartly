@@ -43,7 +43,7 @@ public class PdfGeneratorServiceImpl implements PdfGeneratorService {
         html.append("</style></head><body>");
         html.append("<h1>Order Details</h1>");
         html.append("<table>");
-        html.append("<tr><th>Order ID</th><th>Customer</th><th>Description</th><th>Order Status</th><th>Price</th><th>Payment Type</th><th>Address</th><th>Date</th></tr>");
+        html.append("<tr><th>Order ID</th><th>Customer</th><th>Description</th><th>Order Status</th><th>Price</th><th>Address</th><th>Date</th></tr>");
         for (OrderDto order : orders) {
             html.append("<tr>");
             html.append("<td>").append(order.getId()).append("</td>");
@@ -51,7 +51,7 @@ public class PdfGeneratorServiceImpl implements PdfGeneratorService {
             html.append("<td>").append(order.getDescription()).append("</td>");
             html.append("<td>").append(order.getOrderStatus()).append("</td>");
             html.append("<td>").append(order.getPrice()).append("</td>");
-            html.append("<td>").append(order.getPaymentType()).append("</td>");
+//            html.append("<td>").append(order.getPaymentType()).append("</td>");
             html.append("<td>").append(order.getAddress()).append("</td>");
             html.append("<td>").append(order.getDate()).append("</td>");
             html.append("</tr>");

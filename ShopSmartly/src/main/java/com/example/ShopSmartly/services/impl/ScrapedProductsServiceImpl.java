@@ -255,18 +255,6 @@ public class ScrapedProductsServiceImpl implements ScrapedProductService {
 
                 // Extract the text content of the review count element
                 String reviewCountText = (reviewCountElement != null)? reviewCountElement.text() : "No reviews";
-                // Extract ratings number
-//                String ratings = item.select(".filled-stars").attr("style");
-//                String ratingsNumber = "No ratings";
-//                if (ratings != null && ratings.contains(":") && ratings.contains("%")) {
-//                    try {
-//                        ratingsNumber = ratings.substring(ratings.indexOf(':') + 1, ratings.indexOf('%')).trim();
-//                    } catch (IndexOutOfBoundsException e) {
-//                        ratingsNumber = "No ratings";
-//                    }
-//                }
-                // Parse ratings from style attribute
-//                String ratingsNumber = ratings.substring(ratings.indexOf(':') + 1, ratings.indexOf('%'));
 
                 String imageURL;
                 if(item.select(".product-image").hasClass("wooble")){
