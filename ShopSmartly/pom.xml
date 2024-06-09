@@ -148,7 +148,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>ShopSmartly</finalName>
+		<finalName>ShopSmartly1</finalName>
 	</build>
 
 </project>
