@@ -1,4 +1,4 @@
 FROM openjdk:17-jdk
 COPY target/ShopSmartly1.jar .
 EXPOSE 8181
-ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "ShopSmartly1.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "ShopSmartly.jar"]
